@@ -1,0 +1,32 @@
+name: kota_kota_hari_ini
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  carousel_slider: ^5.1.1
+  flutter:
+    sdk: flutter
+    
+  flutter_svg: ^2.2.3
+  google_fonts: ^6.1.0
+  smooth_page_indicator: ^1.2.1
+  json_annotation: ^4.9.0 
+  supabase_flutter: ^2.0.0
+  provider: ^6.1.5+1
+  get_it: ^9.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  json_serializable: ^6.11.3
+  build_runner: ^2.10.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/image/
