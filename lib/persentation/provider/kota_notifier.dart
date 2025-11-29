@@ -4,6 +4,9 @@ import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_all_kota.dart';
 
 class KotaNotifier extends ChangeNotifier{
+  int _indexcorsel = 0;
+  int get indexcorsel => _indexcorsel;
+
   List<KotaEntity> _datakota = [];
   List<KotaEntity> get datakota => _datakota;
 
@@ -15,6 +18,11 @@ class KotaNotifier extends ChangeNotifier{
 
   KotaNotifier({required this.getAllKota});
   final GetAllKota getAllKota;
+
+  void setCorselindex(int index){
+    _indexcorsel = index;
+    notifyListeners();
+  }
 
   void getAllkota()async{
     _statuskota = RequestState.loding;

@@ -3,6 +3,7 @@ import 'package:kota_kota_hari_ini/data/data_remote_source.dart';
 import 'package:kota_kota_hari_ini/data/kota_repository_impl.dart';
 import 'package:kota_kota_hari_ini/domain/repository/kota_repository.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_all_kota.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/loader_asset_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/provider/kota_notifier.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -20,4 +21,5 @@ void init(){
 
   //provider
   getIt.registerFactory(() => KotaNotifier(getAllKota: getIt()),);
+  getIt.registerFactory(() => LoaderAssetCubit(),);
 }

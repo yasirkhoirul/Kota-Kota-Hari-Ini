@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kota_kota_hari_ini/data/database/supabase.dart';
-import 'package:kota_kota_hari_ini/persentation/pages/main_scaffold_page.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/loader_asset_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/provider/kota_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:kota_kota_hari_ini/persentation/router/app_router.dart';
 import 'injection.dart' as getit;
 
 final GetIt getisinstance = GetIt.instance;
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Supabase.initialize(url: SupabaseUrl.datapiurl, anonKey: SupabaseUrl.apikeys);
-  getit.init(); 
+  await Supabase.initialize(
+    url: SupabaseUrl.datapiurl,
+    anonKey: SupabaseUrl.apikeys,
+  );
+  getit.init();
   runApp(
-
     MultiProvider(
       providers: [
-      ChangeNotifierProvider(create: (context) => KotaNotifier(getAllKota: getisinstance()),)
-    ],child: const MainApp(),)
+        ChangeNotifierProvider(
+          create: (context) => KotaNotifier(getAllKota: getisinstance()),
+        ),
+        BlocProvider(create: (context) => getisinstance<LoaderAssetCubit>(),)
+      ],
+      child: const MainApp(),
+    ),
   );
 }
 
@@ -26,8 +35,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MainScaffoldPage()
+    return MaterialApp.router(
+      title: "Kota kota hari ini",
+      routerConfig: Approute.routermain,
     );
   }
 }

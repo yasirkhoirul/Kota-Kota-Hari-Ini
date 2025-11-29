@@ -4,46 +4,43 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kota_kota_hari_ini/common/constant.dart';
 import 'package:kota_kota_hari_ini/common/request_state.dart';
+import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
 import 'package:kota_kota_hari_ini/persentation/provider/kota_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:kota_kota_hari_ini/persentation/widget/slideintext.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   final CarouselSliderController controllercarausel =
       CarouselSliderController();
-
-  final List<String> imgList = [
-    'https://via.placeholder.com/600/92c952',
-    'https://via.placeholder.com/600/771796',
-    'https://via.placeholder.com/600/24f355',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned(
-          bottom: 0,
-          child: SvgPicture.asset(
-            Images.siluetbackground,
-            width: MediaQuery.of(context).size.width,
-            fit: BoxFit.cover,
-          ),
-        ),
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [Colors.black.withAlpha(200), Colors.transparent],
+              colors: [
+                Colors.black.withAlpha(250),
+                Colors.black.withAlpha(40),
+                Colors.black.withAlpha(0),
+              ],
+              begin: AlignmentGeometry.bottomCenter,
+              end: AlignmentGeometry.topCenter,
             ),
           ),
         ),
+        Positioned(
+          right: 0,
+          left: 0,
+          bottom: -2,
+          child: Image.asset(Images.siluetbackground, fit: BoxFit.fitWidth),
+        ),
         Positioned(right: 0, child: SvgPicture.asset(Images.circleright)),
         Positioned(bottom: 0, child: SvgPicture.asset(Images.cricleback)),
-        Content(dummydata: imgList, controllercarausel: controllercarausel),
+        Content(controllercarausel: controllercarausel),
       ],
     );
   }
@@ -51,20 +48,13 @@ class HomePage extends StatelessWidget {
 
 class Content extends StatefulWidget {
   final CarouselSliderController controllercarausel;
-  final List<String> dummydata;
-  const Content({
-    super.key,
-    required this.dummydata,
-    required this.controllercarausel,
-  });
+  const Content({super.key, required this.controllercarausel});
 
   @override
   State<Content> createState() => _ContentState();
 }
 
 class _ContentState extends State<Content> {
-  var _currentindex = 0;
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -86,24 +76,12 @@ class _ContentState extends State<Content> {
             padding: const EdgeInsets.all(50),
             child: Consumer<KotaNotifier>(
               builder: (context, value, chlid) {
-                print(value.statuskota);
                 if (value.statuskota == RequestState.loaded) {
                   return Column(
-                    spacing: 10,
+                    spacing: 0,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Expanded(
-                        flex: 4,
-                        child: Container(
-                          height: 200,
-                          width: 500,
-                          color: Colors.red,
-                          child: Column(
-                            children: [Text("${value.statuskota}")],
-                          ),
-                        ),
-                      ),
                       Expanded(
                         flex: 5,
                         child: CarouselSlider(
@@ -112,56 +90,30 @@ class _ContentState extends State<Content> {
                             final int index = e.key;
                             return Builder(
                               builder: (context) {
-                                return InkWell(
-                                  onTap: _currentindex == index
-                                      ? () {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                "Membuka item $index",
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      : null,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          e.value.imagePath[0],
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    child: Text("nama kota${e.value.namaKota}"),
-                                  ),
-                                );
+                                return ItemCoarsel(index: index,e: e,);
                               },
                             );
                           }).toList(),
                           options: CarouselOptions(
-                            onPageChanged: (index, reason) => setState(() {
-                              _currentindex = index;
-                            }),
+                            onPageChanged: (index, reason) =>
+                                value.setCorselindex(index),
                             enlargeCenterPage: true,
                             autoPlay: true,
-
                             aspectRatio: 16 / 9,
                             autoPlayCurve: Curves.fastOutSlowIn,
                             autoPlayAnimationDuration: Duration(
                               milliseconds: 800,
                             ),
-                            viewportFraction: 0.2,
+                            viewportFraction: 0.3,
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: IndicatorCroasel(widget: widget, currentindex: _currentindex),
+                      Flexible(
+                        child: IndicatorCroasel(
+                          widget: widget,
+                          currentindex: value.indexcorsel,
+                          count: value.datakota.length,
+                        ),
                       ),
                     ],
                   );
@@ -177,14 +129,109 @@ class _ContentState extends State<Content> {
   }
 }
 
+class ItemCoarsel extends StatelessWidget {
+  const ItemCoarsel({
+    super.key,
+    required this.index, required this.e,
+  });
+  final MapEntry<int, KotaEntity> e;
+  final int index;
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(30),
+      child: Container(
+        width: 400,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 10,
+            ),
+          ],
+          image: DecorationImage(
+            image: NetworkImage(
+              e.value.imagePath[0],
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: InkWell(
+          onTap: context.watch<KotaNotifier>().indexcorsel == index
+              ? () {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "Membuka item $index",
+                      ),
+                    ),
+                  );
+                }
+              : null,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment:
+                  MainAxisAlignment.end,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+            
+              children: [
+                Container(
+                  color: Colors.white,
+                  height: 2,
+                  width:
+                      (MediaQuery.of(
+                        context,
+                      ).size.width *
+                      0.02),
+                ),
+            
+                SizedBox(height: 5),
+                Text(
+                  e.value.lokasi,
+                  overflow: TextOverflow.fade,
+                  style: GoogleFonts.robotoFlex(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  maxLines: 1,
+                ),
+                Text(
+                  "${e.value.namaKota} ",
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: GoogleFonts.robotoFlex(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class IndicatorCroasel extends StatelessWidget {
   const IndicatorCroasel({
     super.key,
     required this.widget,
+    required this.count,
     required int currentindex,
   }) : _currentindex = currentindex;
 
   final Content widget;
+  final int count;
   final int _currentindex;
 
   @override
@@ -205,7 +252,7 @@ class IndicatorCroasel extends StatelessWidget {
         ),
         AnimatedSmoothIndicator(
           activeIndex: _currentindex,
-          count: widget.dummydata.length,
+          count: count,
           effect: WormEffect(
             dotWidth: 5,
             dotHeight: 5,
@@ -247,27 +294,31 @@ class ContentLeft extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          Text(
-            "Selamat Datang",
-            style: GoogleFonts.robotoFlex(
-              fontSize: 32,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
+          SlideInText(
+            child: Text(
+              "Selamat Datang",
+              style: GoogleFonts.robotoFlex(
+                fontSize: 32,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
             ),
           ),
           SizedBox(height: 5),
-          Text(
-            textHeightBehavior: TextHeightBehavior(
-              applyHeightToLastDescent: false,
-              applyHeightToFirstAscent: false,
-            ),
-            "KOTA KOTA",
-            style: GoogleFonts.robotoFlex(
-              fontSize: 96,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-              height: 0,
-              letterSpacing: -5,
+          SlideInText(
+            child: Text(
+              textHeightBehavior: TextHeightBehavior(
+                applyHeightToLastDescent: false,
+                applyHeightToFirstAscent: false,
+              ),
+              "KOTA KOTA",
+              style: GoogleFonts.robotoFlex(
+                fontSize: 96,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+                height: 0,
+                letterSpacing: -5,
+              ),
             ),
           ),
           Text(

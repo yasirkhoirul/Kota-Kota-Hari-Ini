@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Appbars extends StatelessWidget {
-  const Appbars({super.key, required this.height});
+  const Appbars({super.key, required this.height,required this.ontaps});
   final double height;
+  final void Function(int) ontaps;
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +29,15 @@ class Appbars extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: () {}, style: TextButton.styleFrom(
+                TextButton(onPressed: () {
+                  ontaps(0);
+                }, style: TextButton.styleFrom(
                   foregroundColor: Colors.white
                 ),child: const Text("Home"),),
                 spasi,
-                TextButton(onPressed: () {}, style: TextButton.styleFrom(
+                TextButton(onPressed: () {
+                  ontaps(1);
+                }, style: TextButton.styleFrom(
                   foregroundColor: Colors.white
                 ),child: const Text("About"),),
                 spasi,
