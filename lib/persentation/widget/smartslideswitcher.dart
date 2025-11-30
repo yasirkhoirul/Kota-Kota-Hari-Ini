@@ -29,7 +29,7 @@ class _SmartSlideSwitcherState extends State<SmartSlideSwitcher> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 0),
+      duration: const Duration(milliseconds: 0  ),
       // Custom Transition
       transitionBuilder: (Widget child, Animation<double> animation) {
         // Tentukan arah: Jika index baru > index lama = Geser dari Kanan
