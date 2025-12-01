@@ -14,3 +14,4 @@ class Images{
     siluetbackground
   ];
 }
+

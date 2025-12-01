@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kota_kota_hari_ini/common/constant.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/login_page.dart';
 import 'package:kota_kota_hari_ini/persentation/provider/kota_notifier.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/frostglass.dart';
+import 'package:kota_kota_hari_ini/persentation/widget/imagekota.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/page.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/slideintext.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/sliverheader.dart';
@@ -16,8 +18,14 @@ class KotaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool tinggi;
+    bool lebar;
     return LayoutBuilder(
       builder: (context, constrian) {
+        if (constrian.maxWidth > 900) {
+          lebar = true;
+        } else {
+          lebar = false;
+        }
         if (constrian.maxHeight > 800) {
           tinggi = true;
         } else {
@@ -26,7 +34,6 @@ class KotaPage extends StatelessWidget {
         return Container(
           color: Colors.white,
           child: CustomScrollView(
-            
             slivers: [
               SliverAppBar(
                 expandedHeight: tinggi ? constrian.maxHeight : 1000,
@@ -52,7 +59,7 @@ class KotaPage extends StatelessWidget {
                 ),
               ),
               SliverList.builder(
-                itemCount: 1  ,
+                itemCount: 1,
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Container(
@@ -68,14 +75,14 @@ class KotaPage extends StatelessWidget {
                                 Text(
                                   "Scroll ke bawah",
                                   style: GoogleFonts.robotoFlex(
-                                    fontSize: tinggi ? 36 : 18,
+                                    fontSize: tinggi && lebar ? 36 : 18,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 Text(
                                   "untuk menjelajah kota kota",
                                   style: GoogleFonts.robotoFlex(
-                                    fontSize: tinggi ? 20 : 10,
+                                    fontSize: tinggi && lebar ? 20 : 10,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -84,7 +91,7 @@ class KotaPage extends StatelessWidget {
                             Icon(
                               Icons.arrow_drop_down,
                               color: Colors.black,
-                              size: tinggi ? 100 : 50,
+                              size: tinggi && lebar ? 100 : 50,
                             ),
                           ],
                         ),
@@ -110,9 +117,34 @@ class KotaPage extends StatelessWidget {
                   minheight: 150,
                 ),
               ),
-              SliverToBoxAdapter(
-                child: PageItem(items: context.read<KotaNotifier>().datakota,),
-              )
+              lebar
+                  ? SliverToBoxAdapter(
+                      child: PageItem(
+                        items: context.read<KotaNotifier>().datakota,
+                      ),
+                    )
+                  : SliverList.builder(
+                      itemCount: context.read<KotaNotifier>().datakota.length,
+                      itemBuilder: (context, index) {
+                        final data = context
+                            .read<KotaNotifier>()
+                            .datakota[index];
+                        return Card(
+                          color: Colors.white,
+                          child: ListTile(
+                            onTap: () => context.push('/detail', extra: data),
+                            leading: Container(color: Colors.amber ,child: Heroes(data.id, imageUrl: data.imagePath[0])),
+                            title: Text(data.namaKota,style: GoogleFonts.robotoFlex(
+                              fontWeight: FontWeight.bold
+                            ),),
+                            subtitle: Text(data.deskripsiSingkat,maxLines: 3,overflow: TextOverflow.ellipsis,),
+                          ),
+                        );
+                      },
+                    ),
+                SliverToBoxAdapter(
+                  child: lebar?Container(): SizedBox(height: 30,),
+                )
             ],
           ),
         );
@@ -120,8 +152,6 @@ class KotaPage extends StatelessWidget {
     );
   }
 }
-
-
 
 class ContentBar extends StatelessWidget {
   const ContentBar({super.key});
@@ -187,12 +217,14 @@ class _SearchContentState extends State<SearchContent> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "JELAJAHI KOTA",
-                style: GoogleFonts.robotoFlex(
-                  fontSize: widget.ismobile ? 32 : 64,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              Flexible(
+                child: Text(
+                  "JELAJAHI KOTA",
+                  style: GoogleFonts.robotoFlex(
+                    fontSize: widget.ismobile ? 32 : 64,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               BoxInput(

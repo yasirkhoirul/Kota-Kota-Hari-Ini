@@ -5,9 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kota_kota_hari_ini/common/constant.dart';
 import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
-import 'package:kota_kota_hari_ini/persentation/provider/kota_notifier.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/frostglass.dart';
-import 'package:provider/provider.dart';
+import 'package:kota_kota_hari_ini/persentation/widget/imagekota.dart';
 
 class PageItem extends StatefulWidget {
   final List<KotaEntity> items;
@@ -49,7 +48,7 @@ class _PageItemState extends State<PageItem> {
               SizedBox(
                 height: 800,
                 child: Padding(
-                  padding: const EdgeInsets.all(100),
+                  padding: const EdgeInsets.only(top: 100,right: 100,left: 100),
                   child: PageView.builder(
                     controller: _pageController,
                     itemCount: pageCount,
@@ -82,17 +81,14 @@ class _PageItemState extends State<PageItem> {
                                 position: i,
                                 columnCount: 2,
                                 duration: const Duration(milliseconds: 600),
-                                child: ScaleAnimation(
-                                  curve: Curves.easeInOut,
-                                  child: FadeInAnimation(
-                                    curve: Curves.easeIn,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(20),
-                                      child: FrostedGlassScreen(
-                                        height: double.maxFinite,
-                                        width: double.maxFinite,
-                                        child: ItemPage(data: pageItems[i]),
-                                      ),
+                                child: FadeInAnimation(
+                                  curve: Curves.easeIn,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: FrostedGlassScreen(
+                                      height: double.maxFinite,
+                                      width: double.maxFinite,
+                                      child: ItemPage(data: pageItems[i]),
                                     ),
                                   ),
                                 ),
@@ -107,19 +103,43 @@ class _PageItemState extends State<PageItem> {
               ),
 
               // PAGE INDICATOR
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(pageCount, (index) {
-                  return Container(
-                    margin: EdgeInsets.all(4),
-                    width: currentPage == index ? 14 : 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: currentPage == index ? Colors.blue : Colors.grey,
-                      borderRadius: BorderRadius.circular(10),
+              SizedBox(
+                width: 100,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: CircleAvatar(
+                        backgroundColor: Colors.black,
+                        child: IconButton(
+                          onPressed: () {
+                            _pageController.previousPage(
+                              duration: Duration(milliseconds: 900),
+                              curve: Curves.easeInOut,
+                            );
+                          },
+                          icon: Center(child: Icon(Icons.arrow_back,color: Colors.white,)),
+                        ),
+                      ),
                     ),
-                  );
-                }),
+                    Expanded(
+                      child: CircleAvatar(
+                        backgroundColor: Colors.black,
+                        child: IconButton(
+                          onPressed: () {
+                            _pageController.nextPage(
+                              duration: Duration(milliseconds: 900),
+                              curve: Curves.easeInOut,
+                            );
+                          },
+                          icon: Icon(Icons.arrow_forward,color: Colors.white,),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 12),
             ],
@@ -137,7 +157,7 @@ class ItemPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.push('/detail',extra: data),
+      onTap: () => context.push('/detail', extra: data),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
@@ -182,16 +202,7 @@ class ItemPage extends StatelessWidget {
                   color: Colors.white,
                   height: double.maxFinite,
                   width: 50,
-                  child: Hero(
-                    tag: "kedetail${data.id}",
-                    child: CachedNetworkImage(
-                      imageUrl: data.imagePath[0],
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                      placeholder: (context, url) =>
-                          Center(child: CircularProgressIndicator()),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  child: Heroes(data.id, imageUrl: data.imagePath[0])
                 ),
               ),
             ),

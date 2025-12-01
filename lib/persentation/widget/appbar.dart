@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Appbars extends StatefulWidget {
-  const Appbars({super.key, required this.height,required this.ontaps});
+  const Appbars({super.key, required this.height,required this.ontaps, required this.drawetaps});
   final double height;
   final void Function(int) ontaps;
+  final void Function() drawetaps;
 
   @override
   State<Appbars> createState() => _AppbarsState();
@@ -41,7 +42,7 @@ class _AppbarsState extends State<Appbars> {
               
 
               ismobile?
-              Icon(Icons.menu,color: Colors.white,)
+              IconButton(onPressed: widget.drawetaps, icon: Icon(Icons.menu,color: Colors.white,))
               :Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -53,7 +54,7 @@ class _AppbarsState extends State<Appbars> {
                     ),child: const Text("Home"),),
                     spasi,
                     TextButton(onPressed: () {
-                      widget.ontaps(1);
+                      widget.ontaps(3);
                     }, style: TextButton.styleFrom(
                       foregroundColor: Colors.white
                     ),child: const Text("About"),),
@@ -64,11 +65,15 @@ class _AppbarsState extends State<Appbars> {
                       foregroundColor: Colors.white
                     ),child: const Text("Kota"),),
                     spasi,
-                    TextButton(onPressed: () {}, style: TextButton.styleFrom(
+                    TextButton(onPressed: () {
+                      
+                    }, style: TextButton.styleFrom(
                       foregroundColor: Colors.white
                     ),child: const Text("Contact"),),
                     spasi,
-                    IconButton(onPressed: () {}, icon: Icon(Icons.person,color: Colors.white,)),
+                    IconButton(onPressed: () {
+                      widget.ontaps(1);
+                    }, icon: Icon(Icons.person,color: Colors.white,)),
                   ],
                 ),
               ),
@@ -79,3 +84,6 @@ class _AppbarsState extends State<Appbars> {
     );
   }
 }
+
+
+

@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
+import 'package:kota_kota_hari_ini/persentation/pages/contact_us_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/detail_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/home_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/kota_page.dart';
@@ -25,7 +26,7 @@ class Approute {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(path: '/about', builder: (context, state) => LoginPage()),
+              GoRoute(path: '/login', builder: (context, state) => LoginPage()),
             ],
           ),
           StatefulShellBranch(
@@ -33,6 +34,11 @@ class Approute {
               GoRoute(path: '/kota', builder: (context, state) => KotaPage()),
             ],
           ),
+          StatefulShellBranch(routes: 
+            [
+              GoRoute(path: "/about",builder: (context, state) => ContactUsPage(),)
+            ]
+          )
         ],
         
         navigatorContainerBuilder: (context, navigationShell, children) {

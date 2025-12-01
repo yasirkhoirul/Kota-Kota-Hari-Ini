@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/loader_asset_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/splash_page.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/appbar.dart';
+import 'package:kota_kota_hari_ini/persentation/widget/drawercontent.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/smartslideswitcher.dart';
 
 class MainScaffoldPage extends StatefulWidget {
@@ -16,6 +17,7 @@ final List<Widget> children;
 }
 
 class _MainScaffoldPageState extends State<MainScaffoldPage> {
+  final spasi = SizedBox(height: 10,);
   void _gobranch(int index) {
     widget.navigationShell.goBranch(
       index,
@@ -32,6 +34,7 @@ class _MainScaffoldPageState extends State<MainScaffoldPage> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoaderAssetCubit, LoaderAssetState>(
+       
       builder: (context, state) {
         if (state is LoaderAssetLoading) {
           return MySplashScreen();
@@ -39,13 +42,25 @@ class _MainScaffoldPageState extends State<MainScaffoldPage> {
           return Center(child: Text(state.message));
         } else if (state is LoaderAssetLoaded) {
           return Scaffold(
+            drawer: MediaQuery.of(context).size.width>800?null:
+            Drawer(
+              backgroundColor: Colors.black,
+              child: Drawercontent(_gobranch)
+            ),
             backgroundColor: Color(0xFF969393),
             appBar: AppBar(
-              flexibleSpace: Appbars(
-                height: 200,
-                ontaps: (index) {
-                  _gobranch(index);
-                },
+              automaticallyImplyLeading: false,
+              flexibleSpace: Builder(
+                builder: (context) {
+                  return Appbars(
+                    height: 200,
+                    ontaps: (index) {
+                      _gobranch(index);
+                    }, drawetaps: () { 
+                      Scaffold.of(context).openDrawer();
+                     },
+                  );
+                }
               ),
             ),
             body: SmartSlideSwitcher(

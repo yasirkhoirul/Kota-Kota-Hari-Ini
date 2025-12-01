@@ -32,4 +32,7 @@ class LoaderAssetCubit extends Cubit<LoaderAssetState> {
       emit(LoaderAssetError(e.toString()));
     }
   }
+  bool checkWidth(BuildContext context){
+    return MediaQuery.of(context).size.width>800;
+  }
 }
