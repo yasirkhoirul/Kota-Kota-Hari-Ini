@@ -55,6 +55,7 @@ class DetailContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Stack(
           children: [
@@ -62,7 +63,7 @@ class DetailContent extends StatelessWidget {
               child: Hero(
                 tag: "kedetail${data.id}",
                 child: CachedNetworkImage(
-                  imageUrl: data.imagePath[0],
+                  imageUrl: data.imagePath.isEmpty?"": data.imagePath[0],
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
                       Center(child: CircularProgressIndicator()),
@@ -114,7 +115,7 @@ class Gambar extends StatelessWidget {
         child: Container(
           color: Colors.white,
           child: CachedNetworkImage(
-            imageUrl: data.imagePath[0],
+            imageUrl: data.imagePath.isEmpty?"": data.imagePath[0],
             errorWidget: (context, url, error) => Icon(Icons.error),
             placeholder: (context, url) =>
                 Center(child: CircularProgressIndicator()),

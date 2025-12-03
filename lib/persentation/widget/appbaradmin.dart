@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/auth_user_cubit.dart';
 
-class Appbars extends StatefulWidget {
-  const Appbars({super.key, required this.height,required this.ontaps, required this.drawetaps});
+class Appbaradmin extends StatefulWidget {
+  const Appbaradmin({super.key, required this.height,required this.ontaps, required this.drawetaps});
   final double height;
   final void Function(int) ontaps;
   final void Function() drawetaps;
 
   @override
-  State<Appbars> createState() => _AppbarsState();
+  State<Appbaradmin> createState() => _AppbaradminState();
 }
 
-class _AppbarsState extends State<Appbars> {
+class _AppbaradminState extends State<Appbaradmin> {
   late bool ismobile;
   @override
   Widget build(BuildContext context) {
@@ -47,33 +49,16 @@ class _AppbarsState extends State<Appbars> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    
                     TextButton(onPressed: () {
-                      widget.ontaps(0);
-                    }, style: TextButton.styleFrom(
-                      foregroundColor: Colors.white
-                    ),child: const Text("Home"),),
-                    spasi,
-                    TextButton(onPressed: () {
-                      widget.ontaps(3);
-                    }, style: TextButton.styleFrom(
-                      foregroundColor: Colors.white
-                    ),child: const Text("About"),),
-                    spasi,
-                    TextButton(onPressed: () {
-                      widget.ontaps(2);
-                    }, style: TextButton.styleFrom(
-                      foregroundColor: Colors.white
-                    ),child: const Text("Kota"),),
-                    spasi,
-                    TextButton(onPressed: () {
-                      
+                      widget.ontaps(4);
                     }, style: TextButton.styleFrom(
                       foregroundColor: Colors.white
                     ),child: const Text("Upload"),),
                     spasi,
                     IconButton(onPressed: () {
-                      widget.ontaps(1);
-                    }, icon: Icon(Icons.person,color: Colors.white,)),
+                      context.read<AuthUserCubit>().gologout();
+                    }, icon: Icon(Icons.logout,color: Colors.white,)),
                   ],
                 ),
               ),

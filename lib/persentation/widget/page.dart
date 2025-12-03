@@ -202,7 +202,7 @@ class ItemPage extends StatelessWidget {
                   color: Colors.white,
                   height: double.maxFinite,
                   width: 50,
-                  child: Heroes(data.id, imageUrl: data.imagePath[0])
+                  child: Heroes(data.id!, imageUrl:data.imagePath.isEmpty?'': data.imagePath[0])
                 ),
               ),
             ),

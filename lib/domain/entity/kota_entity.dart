@@ -1,5 +1,5 @@
 class KotaEntity {
-  final int id;
+  final int? id;
   final String namaKota;
   final String deskripsiSingkat;
   final String deskripsiPanjang;

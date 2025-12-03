@@ -1,20 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kota_kota_hari_ini/common/constant.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/search_kota_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/login_page.dart';
-import 'package:kota_kota_hari_ini/persentation/provider/kota_notifier.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/frostglass.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/imagekota.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/page.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/slideintext.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/sliverheader.dart';
-import 'package:provider/provider.dart';
+import 'package:logger/logger.dart';
 
-class KotaPage extends StatelessWidget {
+class KotaPage extends StatefulWidget {
   const KotaPage({super.key});
+
+  @override
+  State<KotaPage> createState() => _KotaPageState();
+}
+
+class _KotaPageState extends State<KotaPage> {
+  final ScrollController _controllerscroll = ScrollController();
+  double _lastscroll = 0;
+  @override
+  void initState() {
+    context.read<SearchKotaCubit>().init();
+    _controllerscroll.addListener(() {
+      _lastscroll = _controllerscroll.offset;
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controllerscroll.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     bool tinggi;
@@ -34,6 +57,7 @@ class KotaPage extends StatelessWidget {
         return Container(
           color: Colors.white,
           child: CustomScrollView(
+            controller: _controllerscroll,
             slivers: [
               SliverAppBar(
                 expandedHeight: tinggi ? constrian.maxHeight : 1000,
@@ -47,12 +71,21 @@ class KotaPage extends StatelessWidget {
                         ),
                       ),
                       tinggi
-                          ? Positioned.fill(child: ContentBar())
+                          ? Positioned.fill(
+                              child: ContentBar(onSubmitted: (String p1) {
+
+                                context.read<SearchKotaCubit>().onSearch(p1);
+                                _controllerscroll.animateTo(_controllerscroll.position.maxScrollExtent, duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
+                              }),
+                            )
                           : Positioned(
                               top: 0,
                               left: 0,
                               right: 0,
-                              child: ContentBar(),
+                              child: ContentBar(onSubmitted: (String p1) {
+                                context.read<SearchKotaCubit>().onSearch(p1);
+                                _controllerscroll.animateTo(_controllerscroll.position.maxScrollExtent, duration: Duration(milliseconds: 1), curve: Curves.easeInOutCubic);
+                              }),
                             ),
                     ],
                   ),
@@ -109,6 +142,9 @@ class KotaPage extends StatelessWidget {
                 delegate: Sliverheader(
                   child: Center(
                     child: SearchBar(
+                      onSubmitted: (value) {
+                        context.read<SearchKotaCubit>().onSearch(value);
+                      },
                       hintText: "Cari Sesuatu?",
                       trailing: [Icon(Icons.search)],
                     ),
@@ -119,32 +155,107 @@ class KotaPage extends StatelessWidget {
               ),
               lebar
                   ? SliverToBoxAdapter(
-                      child: PageItem(
-                        items: context.read<KotaNotifier>().datakota,
+                      child: BlocBuilder<SearchKotaCubit, SearchKotaState>(
+                        builder: (context, state) {
+                          if (state is SearchKotaLoading) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (state is SearchKotaLoaded) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _controllerscroll.animateTo(
+                                _lastscroll,
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeInOut,
+                              );
+                            });
+
+                            print(
+                              state.data.map(
+                                (e) => e,
+                              )
+                            );
+                            return state.data.isEmpty
+                                ? Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Center(
+                                      child: Text("Tidak Ada Kota Ditemukan"),
+                                    ),
+                                  )
+                                : PageItem(items: state.data);
+                          } else {
+                            return Center(child: Text("terjadi kesalahan"));
+                          }
+                        },
                       ),
                     )
-                  : SliverList.builder(
-                      itemCount: context.read<KotaNotifier>().datakota.length,
-                      itemBuilder: (context, index) {
-                        final data = context
-                            .read<KotaNotifier>()
-                            .datakota[index];
-                        return Card(
-                          color: Colors.white,
-                          child: ListTile(
-                            onTap: () => context.push('/detail', extra: data),
-                            leading: Container(color: Colors.amber ,child: Heroes(data.id, imageUrl: data.imagePath[0])),
-                            title: Text(data.namaKota,style: GoogleFonts.robotoFlex(
-                              fontWeight: FontWeight.bold
-                            ),),
-                            subtitle: Text(data.deskripsiSingkat,maxLines: 3,overflow: TextOverflow.ellipsis,),
-                          ),
-                        );
-                      },
+                  : SliverToBoxAdapter(
+                      child: BlocBuilder<SearchKotaCubit, SearchKotaState>(
+                        builder: (context, state) {
+                          
+                          if (state is SearchKotaLoading) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (state is SearchKotaLoaded) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _controllerscroll.animateTo(
+                                _lastscroll,
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeInOutCubic,
+                              );
+                            });
+                            Logger().d(state.data);
+                            return state.data.isEmpty
+                                ? Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Center(
+                                      child: Text("Tidak Ada Kota Ditemukan"),
+                                    ),
+                                  )
+                                : SizedBox(
+                                    height: 500,
+                                    child: ListView.builder(
+                                      itemCount: state.data.length,
+                                      itemBuilder: (context, index) => Card(
+                                        color: Colors.white,
+                                        child: ListTile(
+                                          onTap: () => context.push(
+                                            '/detail',
+                                            extra: state.data[index],
+                                          ),
+                                          leading: SizedBox(
+                                            height: 56
+                                            ,
+                                            width: 56,
+                                            child: state.data[index].imagePath.isEmpty?Container(): 
+                                            Heroes(
+                                              state.data[index].id!,
+                                              imageUrl: state
+                                                  .data[index]
+                                                  .imagePath.first,
+                                            ),
+                                          ),
+                                          title: Text(
+                                            state.data[index].namaKota,
+                                            style: GoogleFonts.robotoFlex(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            state.data[index].deskripsiSingkat,
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                          } else {
+                            return Center(child: Text("terjadi kesalahan"));
+                          }
+                        },
+                      ),
                     ),
-                SliverToBoxAdapter(
-                  child: lebar?Container(): SizedBox(height: 30,),
-                )
+              SliverToBoxAdapter(
+                child: lebar ? Container() : SizedBox(height: 30),
+              ),
             ],
           ),
         );
@@ -154,7 +265,8 @@ class KotaPage extends StatelessWidget {
 }
 
 class ContentBar extends StatelessWidget {
-  const ContentBar({super.key});
+  final Function(String) onSubmitted;
+  const ContentBar({super.key, required this.onSubmitted});
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -167,7 +279,12 @@ class ContentBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(child: TextContent(ismobile: false)),
-                Expanded(child: SearchContent(ismobile: false)),
+                Expanded(
+                  child: SearchContent(
+                    ismobile: false,
+                    onSubmitted: onSubmitted,
+                  ),
+                ),
               ],
             ),
           );
@@ -179,7 +296,7 @@ class ContentBar extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(20),
-                child: SearchContent(ismobile: true),
+                child: SearchContent(ismobile: true, onSubmitted: onSubmitted),
               ),
               TextContent(ismobile: true),
             ],
@@ -192,7 +309,12 @@ class ContentBar extends StatelessWidget {
 
 class SearchContent extends StatefulWidget {
   final bool ismobile;
-  const SearchContent({super.key, required this.ismobile});
+  final Function(String) onSubmitted;
+  const SearchContent({
+    super.key,
+    required this.ismobile,
+    required this.onSubmitted,
+  });
 
   @override
   State<SearchContent> createState() => _SearchContentState();
@@ -227,12 +349,16 @@ class _SearchContentState extends State<SearchContent> {
                   ),
                 ),
               ),
-              BoxInput(
-                lead: "CARI SESUATU",
-                icon: Icon(Icons.search),
-                obsecure: false,
-                controller: control,
-                validator: (value) => null,
+              Form(
+                child: BoxInput(
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: widget.onSubmitted,
+                  lead: "CARI SESUATU",
+                  icon: Icon(Icons.search),
+                  obsecure: false,
+                  controller: control,
+                  validator: (value) => null,
+                ),
               ),
             ],
           ),

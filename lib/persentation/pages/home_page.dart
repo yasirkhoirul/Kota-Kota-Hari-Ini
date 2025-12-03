@@ -86,7 +86,9 @@ class _ContentState extends State<Content> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ContentLeft(),
-                  Container(height: 500, child: ContentRight(widget: widget)),
+                  Container(
+                    height: 500,
+                    child: ContentRight(widget: widget)),
                 ],
               ),
             ),
@@ -106,7 +108,7 @@ class ContentRight extends StatelessWidget {
   Widget build(BuildContext context) {
     final datalrbar = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 50),
+      padding: EdgeInsets.only(bottom: 50,top: datalrbar<900?0:50),
       child: Consumer<KotaNotifier>(
         builder: (context, value, chlid) {
           if (value.statuskota == RequestState.loaded) {
@@ -118,7 +120,8 @@ class ContentRight extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 5,
-                    child: CarouselSlider(
+                    child: (value.datakota.length<3)?Container(): 
+                    CarouselSlider(
                       carouselController: widget.controllercarausel,
                       items: value.datakota.asMap().entries.take(3).map((e) {
                         final int index = e.key;
@@ -133,7 +136,7 @@ class ContentRight extends StatelessWidget {
                             value.setCorselindex(index),
                         enlargeCenterPage: true,
                         autoPlay: true,
-                        aspectRatio: 16 / 9,
+                       height: double.infinity,
                         autoPlayCurve: Curves.fastOutSlowIn,
                         autoPlayAnimationDuration: Duration(milliseconds: 800),
                         viewportFraction: datalrbar >= 900 ? 0.3 : 0.7,
@@ -171,6 +174,7 @@ class ItemCoarsel extends StatelessWidget {
       padding: const EdgeInsets.all(30),
       child: Container(
         width: 400,
+        height: double.maxFinite,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           boxShadow: [BoxShadow(color: Colors.black, blurRadius: 10)],
@@ -298,102 +302,106 @@ class ContentLeft extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(40),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Hero(
-            tag: "line",
-            child: Container(
-              height: 5,
-              width: 114,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2),
-                color: Colors.white,
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          SlideInText(
-            child: Text(
-              "Selamat Datang",
-              style: GoogleFonts.robotoFlex(
-                fontSize: 32,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          SizedBox(height: 5),
-          SlideInText(
-            child: Text(
-              textHeightBehavior: TextHeightBehavior(
-                applyHeightToLastDescent: false,
-                applyHeightToFirstAscent: false,
-              ),
-              "KOTA KOTA",
-              style: GoogleFonts.robotoFlex(
-                fontSize: 96,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                height: 0,
-                letterSpacing: -5,
-              ),
-            ),
-          ),
-          SlideInText(
-            child: Text(
-              textHeightBehavior: TextHeightBehavior(
-                applyHeightToLastDescent: false,
-                applyHeightToFirstAscent: false,
-              ),
-              "HARI INI",
-              style: GoogleFonts.robotoFlex(
-                fontSize: 96,
-                fontWeight: FontWeight.w900,
-                color: Colors.black,
-                height: 0,
-                letterSpacing: -5,
-              ),
-            ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            """web edukasi tentang sejarah kota indonesia
-intinya si webnya menjabarkan nilai historis dari kota kota di indonsia""",
-            style: GoogleFonts.robotoFlex(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 20),
-          OutlinedButton(
-            onPressed: () {},
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              child: Row(
-                spacing: 5,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Lihat Kota Lain",
-                    style: GoogleFonts.robotoFlex(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
+      child: LayoutBuilder(
+        builder: (context,contrains) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Hero(
+                tag: "line",
+                child: Container(
+                  height: 5,
+                  width: contrains.maxWidth<540?64:114,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(2),
                     color: Colors.white,
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ],
+              SizedBox(height: 10),
+              SlideInText(
+                child: Text(
+                  "Selamat Datang",
+                  style: GoogleFonts.robotoFlex(
+                    fontSize: contrains.maxWidth<540?16:32,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+              SlideInText(
+                child: Text(
+                  textHeightBehavior: TextHeightBehavior(
+                    applyHeightToLastDescent: false,
+                    applyHeightToFirstAscent: false,
+                  ),
+                  "KOTA KOTA",
+                  style: GoogleFonts.robotoFlex(
+                    fontSize: contrains.maxWidth<540?48:96,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    height: 0,
+                    letterSpacing: -5,
+                  ),
+                ),
+              ),
+              SlideInText(
+                child: Text(
+                  textHeightBehavior: TextHeightBehavior(
+                    applyHeightToLastDescent: false,
+                    applyHeightToFirstAscent: false,
+                  ),
+                  "HARI INI",
+                  style: GoogleFonts.robotoFlex(
+                    fontSize: contrains.maxWidth<540?48:96,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,
+                    height: 0,
+                    letterSpacing: -5,
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                """web edukasi tentang sejarah kota indonesia
+intinya si webnya menjabarkan nilai historis dari kota kota di indonsia""",
+                style: GoogleFonts.robotoFlex(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 20),
+              OutlinedButton(
+                onPressed: () {},
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: Row(
+                    spacing: 5,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Lihat Kota Lain",
+                        style: GoogleFonts.robotoFlex(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w100,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
       ),
     );
   }

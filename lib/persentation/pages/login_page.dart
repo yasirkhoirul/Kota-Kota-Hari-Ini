@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/auth_user_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/frostglass.dart';
+import 'package:kota_kota_hari_ini/persentation/widget/slideintext.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -66,123 +69,177 @@ class _LoginPageState extends State<LoginPage>
           child: Image.asset("assets/image/kotlam.png", fit: BoxFit.fitWidth),
         ),
         LayoutBuilder(
-          builder: (context,constrian) {
-            if (constrian.maxWidth>800) {
+          builder: (context, constrian) {
+            if (constrian.maxWidth > 800) {
               ismobile = false;
-            }else{
+            } else {
               ismobile = true;
             }
-            if (constrian.maxHeight < 800){
+            if (constrian.maxHeight < 800) {
               needscrollview = true;
-            }else{
+            } else {
               needscrollview = false;
             }
             return Center(
               child: SingleChildScrollView(
                 child: FrostedGlassScreen(
-                  width: ismobile! ? 400 : 800,
-                  height: needscrollview ? 800 : MediaQuery.of(context).size.height *0.8,
+                  width: ismobile!
+                      ? MediaQuery.of(context).size.width * 0.8
+                      : 800,
+                  height: needscrollview
+                      ? 650
+                      : MediaQuery.of(context).size.height * 0.8,
                   child: Padding(
                     padding: const EdgeInsets.all(50),
-                    child: Form(
-                      key: _formkey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 20,
-                        children: [
-                          AnimatedBuilder(
-                            animation: animation,
-                            builder: (context, child) {
-                              return CircleAvatar(
-                                backgroundColor: Color(0xFF474747),
-                                radius: 5 + animation.value,
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                  size: animation.value,
+                    child: BlocBuilder<AuthUserCubit, AuthUserState>(
+                      builder: (context, state) {
+                        if (state is AuthUserLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (state is AuthUserError) {
+                          return Column(
+                            children: [
+                              Text(state.message),
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.read<AuthUserCubit>().goinit();
+                                },
+                                child: Text("Login lagi"),
+                              ),
+                            ],
+                          );
+                        } else if (state is AuthUserLoaded) {
+                          return Column(
+                            children: [
+                              Text(state.message),
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.read<AuthUserCubit>().goinit();
+                                },
+                                child: Text("Login lagi"),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Form(
+                            key: _formkey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 20,
+                              children: [
+                                AnimatedBuilder(
+                                  animation: animation,
+                                  builder: (context, child) {
+                                    return CircleAvatar(
+                                      backgroundColor: Color(0xFF474747),
+                                      radius: 5 + animation.value,
+                                      child: Icon(
+                                        Icons.person,
+                                        color: Colors.white,
+                                        size: animation.value,
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                          Text(
-                            "LOGIN",
-                            style: GoogleFonts.robotoFlex(
-                              color: Color(0xFF474747),
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          BoxInput(
-                            lead: 'USERNAME',
-                            icon: Icon(Icons.person),
-                            controller: _urcontroller,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "email tidak boleh kosong";
-                              }
-                              return null;
-                            },
-                            obsecure: false,
-                          ),
-                          BoxInput(
-                            lead: 'PASSWORD',
-                            icon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  statehide = !statehide;
-                                });
-                              },
-                              icon: Icon(
-                                statehide ? Icons.visibility : Icons.visibility_off,
-                              ),
-                            ),
-                            controller: _pwcontroller,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "pw tidak boleh kosong";
-                              }
-                              if (value.length < 8) {
-                                return "pw tidak boleh kurang dari 8";
-                              }
-                              return null;
-                            },
-                            obsecure: statehide,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF474747), // warna latar belakang
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            onPressed: () {
-                
-                              if (_formkey.currentState!.validate()) {
-                                print("yee");
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Center(
-                                child: Text(
-                                  "Login",
+                                Text(
+                                  "LOGIN",
                                   style: GoogleFonts.robotoFlex(
-                                    color: Colors.white,
-                                    fontSize: 16,
+                                    color: Color(0xFF474747),
+                                    fontSize: 48,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
+                                SlideInText(
+                                  child: BoxInput(
+                                    onSubmitted: (_) {
+                                      FocusScope.of(context).nextFocus();
+                                    },
+                                    lead: 'USERNAME',
+                                    icon: Icon(Icons.person),
+                                    controller: _urcontroller,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "email tidak boleh kosong";
+                                      }
+                                      return null;
+                                    },
+                                    obsecure: false,
+                                    textInputAction: TextInputAction.next,
+                                  ),
+                                ),
+                                SlideInText(
+                                  child: BoxInput(
+                                    textInputAction: TextInputAction.done,
+                                    onSubmitted: (_) {
+                                      FocusScope.of(context).nextFocus();
+                                    },
+                                    lead: 'PASSWORD',
+                                    icon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          statehide = !statehide;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        statehide
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                    ),
+                                    controller: _pwcontroller,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "pw tidak boleh kosong";
+                                      }
+                                      if (value.length < 8) {
+                                        return "pw tidak boleh kurang dari 8";
+                                      }
+                                      return null;
+                                    },
+                                    obsecure: statehide,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(
+                                      0xFF474747,
+                                    ), // warna latar belakang
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    if (_formkey.currentState!.validate()) {
+                                      context.read<AuthUserCubit>().onlogin(
+                                        _urcontroller.text,
+                                        _pwcontroller.text,
+                                      );
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Center(
+                                      child: Text(
+                                        "Login",
+                                        style: GoogleFonts.robotoFlex(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
+                          );
+                        }
+                      },
                     ),
                   ),
                 ),
               ),
             );
-          }
+          },
         ),
       ],
     );
@@ -190,6 +247,8 @@ class _LoginPageState extends State<LoginPage>
 }
 
 class BoxInput extends StatelessWidget {
+  final Function(String) onSubmitted;
+  final TextInputAction textInputAction;
   final String lead;
   final Widget icon;
   final TextEditingController controller;
@@ -202,11 +261,17 @@ class BoxInput extends StatelessWidget {
     required this.obsecure,
     required this.controller,
     required this.validator,
+    required this.onSubmitted,
+    required this.textInputAction,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: GoogleFonts.robotoFlex(color: Colors.white),
+      textInputAction: textInputAction,
+      maxLines: 1,
+      onFieldSubmitted: onSubmitted,
       obscureText: obsecure,
       controller: controller,
       validator: validator,
