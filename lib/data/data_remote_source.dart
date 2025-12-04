@@ -6,12 +6,21 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract class DataRemoteSource {
   Future<List<Kotamodel>> getAllKota();
   Future<List<Kotamodel>> searchKota(String keyword);
+  Future<Kotamodel> getOneKota(String id);
   Future<String> signout();
   Future<Session?> login(String ur, String email);
   Future<bool> statuslogin();
   Future<String> uploadKota(Uint8List imagefile, String rowid);
   Future<String> uploadStorageFoto(Uint8List? file, String? mimeType);
-  Future<String> tambahDataKota(String namakota, String deskripsisingkat, String deskripsipanajng, String image_path, String created, String lokasi);
+  Future<String> tambahDataKota(
+    String namakota,
+    String deskripsisingkat,
+    String deskripsipanajng,
+    String image_path,
+    String created,
+    String lokasi,
+  );
+  Future<String> updatedataKota(Kotamodel data);
 }
 
 class DataRemoteSourceImpl implements DataRemoteSource {
@@ -120,36 +129,71 @@ class DataRemoteSourceImpl implements DataRemoteSource {
   }
 
   @override
-  Future<String> tambahDataKota(String namakota, String deskripsisingkat, String deskripsipanajng, String image_path, String created, String lokasi) async {
+  Future<String> tambahDataKota(
+    String namakota,
+    String deskripsisingkat,
+    String deskripsipanajng,
+    String image_path,
+    String created,
+    String lokasi,
+  ) async {
     try {
       final supabase = Supabase.instance.client;
 
-      await supabase.from('Kota').insert(
-        {
-          'nama_kota': namakota,
-          'deskripsi_singkat': deskripsisingkat,
-          'deskripsi_panjang': deskripsipanajng,
-          'image_path': [image_path],
-          'lokasi': lokasi,
-        },
-      );
+      await supabase.from('Kota').insert({
+        'nama_kota': namakota,
+        'deskripsi_singkat': deskripsisingkat,
+        'deskripsi_panjang': deskripsipanajng,
+        'image_path': [image_path],
+        'lokasi': lokasi,
+      });
       return "succes";
     } catch (e) {
-      print("Error tambah data: $e");
       throw Exception(e.toString());
     }
   }
-  
+
   @override
-  Future<String> signout() async{
+  Future<String> signout() async {
     try {
       await Supabase.instance.client.auth.signOut();
       return "berhasil logout";
     } catch (e) {
-      throw Exception(
-        e
-      );
+      throw Exception(e);
     }
-    
+  }
+
+  @override
+  Future<Kotamodel> getOneKota(String id) async {
+    try {
+      final data = await Supabase.instance.client
+          .from("Kota")
+          .select()
+          .eq("id", id)
+          .single();
+      return Kotamodel.fromJson(data);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<String> updatedataKota(Kotamodel data) async {
+    try {
+      final update = await Supabase.instance.client
+          .from('Kota')
+          .update({
+            'nama_kota': data.nama_kota,
+            'deskripsi_singkat': data.deskripsi_singkat,
+            'deskripsi_panjang': data.deskripsi_panjang,
+            'image_path': data.image_path,
+            'lokasi': data.lokasi,
+          })
+          .eq('id', data.id);
+
+      return "Berhasil update: $update";
+    } catch (error) {
+      throw Exception(error);
+    }
   }
 }

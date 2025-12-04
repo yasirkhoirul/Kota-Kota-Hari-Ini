@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage>
                                   "LOGIN",
                                   style: GoogleFonts.robotoFlex(
                                     color: Color(0xFF474747),
-                                    fontSize: 48,
+                                    fontSize: constrian.maxHeight<822?28:40,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

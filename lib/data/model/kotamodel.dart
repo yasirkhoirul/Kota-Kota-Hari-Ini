@@ -20,4 +20,7 @@ class Kotamodel {
   Map<String,dynamic> toJson()=> _$KotamodelToJson(this);
 
   KotaEntity toEntity()=> KotaEntity(id, nama_kota, deskripsi_singkat, deskripsi_panjang, image_path, created_at, lokasi);
+  factory Kotamodel.fromEntity(KotaEntity data){
+    return Kotamodel(data.id!, data.namaKota, data.deskripsiSingkat, data.deskripsiPanjang, data.imagePath, data.createdAt, data.lokasi);
+  }
 }

@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_status_login.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/login.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/logout.dart';
-import 'package:logger/web.dart';
 import 'package:meta/meta.dart';
 
 part 'auth_user_state.dart';
@@ -36,6 +35,7 @@ class AuthUserCubit extends Cubit<AuthUserState> {
   }
 
   void gologout()async{
+     emit(AuthUserLoading());
     try {
       final data = await logout.execute();
       emit(AuthUserLoaded(data, islogin: false));

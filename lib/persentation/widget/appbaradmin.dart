@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/auth_user_cubit.dart';
 
 class Appbaradmin extends StatefulWidget {
@@ -36,7 +37,8 @@ class _AppbaradminState extends State<Appbaradmin> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text("logo",style: TextStyle(fontWeight: FontWeight.bold),),
+                    const Icon(Icons.share_location_rounded,color: Colors.white,),
+                    SizedBox(width: 10,),
                     const Text("kota kota hari ini",style: TextStyle(color: Colors.white),),
                   ],
                 ),
@@ -51,11 +53,18 @@ class _AppbaradminState extends State<Appbaradmin> {
                   children: [
                     
                     TextButton(onPressed: () {
-                      widget.ontaps(4);
+                      widget.ontaps(0);
                     }, style: TextButton.styleFrom(
                       foregroundColor: Colors.white
                     ),child: const Text("Upload"),),
                     spasi,
+                    TextButton(onPressed: () {
+                      widget.ontaps(1);
+                    }, style: TextButton.styleFrom(
+                      foregroundColor: Colors.white
+                    ),child: const Text("List Kota"),),
+                    spasi,
+                    
                     IconButton(onPressed: () {
                       context.read<AuthUserCubit>().gologout();
                     }, icon: Icon(Icons.logout,color: Colors.white,)),

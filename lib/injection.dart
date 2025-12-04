@@ -4,17 +4,21 @@ import 'package:kota_kota_hari_ini/data/data_remote_source.dart';
 import 'package:kota_kota_hari_ini/data/kota_repository_impl.dart';
 import 'package:kota_kota_hari_ini/domain/repository/kota_repository.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_all_kota.dart';
+import 'package:kota_kota_hari_ini/domain/usecase/get_one_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_search_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_status_login.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/login.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/logout.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/post_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/tambahkota.dart';
+import 'package:kota_kota_hari_ini/domain/usecase/update_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/uploadfotostorage.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/auth_user_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/detail_kota_dart_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/loader_asset_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/search_kota_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/tambahkota_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/update_kota_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/upload_page_dart_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/provider/kota_notifier.dart';
 
@@ -36,6 +40,8 @@ void init(){
   getIt.registerLazySingleton(() => Login(getIt()),);
   getIt.registerLazySingleton(() => GetStatusLogin(getIt()),);
   getIt.registerLazySingleton(() => Logout(getIt()),);
+  getIt.registerLazySingleton(() => GetOneKota(getIt()),);
+  getIt.registerLazySingleton(() => UpdateKota(getIt()),);
 
   //dataremotsource
   getIt.registerLazySingleton<DataRemoteSource>(() => DataRemoteSourceImpl(),);
@@ -47,4 +53,6 @@ void init(){
   getIt.registerFactory(() => UploadPageDartCubit(getIt(), kota: getIt()),);
   getIt.registerFactory(() => TambahkotaCubit(getIt(), getIt(), imagePicker: getIt()),);
   getIt.registerFactory(() => AuthUserCubit(getIt(), getStatusLogin: getIt(), logout: getIt()),);
+  getIt.registerFactory(() => DetailKotaDartCubit(getIt()),);
+  getIt.registerFactory(() => UpdateKotaCubit(getIt()),);
 }

@@ -29,12 +29,6 @@ class KotaNotifier extends ChangeNotifier{
     notifyListeners();
     try {
       _datakota = await getAllKota.execute();
-      print(_datakota.length);
-      _datakota.map(
-        (e) {
-          print(e.namaKota);
-        },
-      );
       _statuskota = RequestState.loaded;
       
     } catch (e) {

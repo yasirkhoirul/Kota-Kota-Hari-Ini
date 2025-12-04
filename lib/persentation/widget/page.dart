@@ -59,7 +59,6 @@ class _PageItemState extends State<PageItem> {
                       final pageItems = getItemsByPage(pageIndex);
                       return LayoutBuilder(
                         builder: (context, constraints) {
-                          print(constraints.maxWidth);
                           double width = constraints.maxWidth;
                           double height = constraints.maxHeight;
 
@@ -80,7 +79,7 @@ class _PageItemState extends State<PageItem> {
                               return AnimationConfiguration.staggeredGrid(
                                 position: i,
                                 columnCount: 2,
-                                duration: const Duration(milliseconds: 600),
+                                duration: const Duration(milliseconds: 500),
                                 child: FadeInAnimation(
                                   curve: Curves.easeIn,
                                   child: Padding(

@@ -147,9 +147,6 @@ class _TambahkotaPageState extends State<TambahkotaPage> {
                                   createdAt.toString(),
                                   _lokasiController.text,
                                 );
-                          } else {
-                            // Jika tidak valid, otomatis muncul tulisan merah di bawah textfield
-                            print("Form tidak valid"); 
                           }
                         },
                         child: const Text("Kirim"),
@@ -167,9 +164,7 @@ class _TambahkotaPageState extends State<TambahkotaPage> {
                         ],
                       );
                     } else {
-                      return Container(
-                        child: Text(state.toString()),
-                      );
+                      return Text(state.toString());
                     }
                   },
                 ),

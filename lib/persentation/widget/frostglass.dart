@@ -26,8 +26,12 @@ class _FrostedGlassScreenState extends State<FrostedGlassScreen> with SingleTick
     _blurAnimation = Tween<double>(begin: 0, end: 15).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
-    _controller.forward();
-    print("dipanggil");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+  Future.delayed(const Duration(milliseconds: 500), () {
+    if (mounted) _controller.forward();
+  });
+});
   }
 
   @override

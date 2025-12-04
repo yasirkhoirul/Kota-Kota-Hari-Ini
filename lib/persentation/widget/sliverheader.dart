@@ -15,7 +15,6 @@ class Sliverheader extends SliverPersistentHeaderDelegate{
   double get maxExtent => maxheight;
 
   @override
-  // TODO: implement minExtent
   double get minExtent => minheight;
 
   @override

@@ -60,6 +60,7 @@ class _KotaPageState extends State<KotaPage> {
             controller: _controllerscroll,
             slivers: [
               SliverAppBar(
+                automaticallyImplyLeading: false,
                 expandedHeight: tinggi ? constrian.maxHeight : 1000,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
@@ -149,8 +150,8 @@ class _KotaPageState extends State<KotaPage> {
                       trailing: [Icon(Icons.search)],
                     ),
                   ),
-                  maxheight: 200,
-                  minheight: 150,
+                  maxheight: 100,
+                  minheight: 80,
                 ),
               ),
               lebar
@@ -168,11 +169,7 @@ class _KotaPageState extends State<KotaPage> {
                               );
                             });
 
-                            print(
-                              state.data.map(
-                                (e) => e,
-                              )
-                            );
+                            
                             return state.data.isEmpty
                                 ? Padding(
                                     padding: const EdgeInsets.all(20),
@@ -291,7 +288,7 @@ class ContentBar extends StatelessWidget {
         } else {
           return Column(
             spacing: 20,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(

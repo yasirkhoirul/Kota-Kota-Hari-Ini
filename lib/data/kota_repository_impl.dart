@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:gotrue/src/types/session.dart';
 import 'package:kota_kota_hari_ini/data/data_remote_source.dart';
+import 'package:kota_kota_hari_ini/data/model/kotamodel.dart';
 import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
 import 'package:kota_kota_hari_ini/domain/repository/kota_repository.dart';
 
@@ -78,16 +79,16 @@ class KotaRepositoryImpl implements KotaRepository {
       final data = await dataRemoteSource.login(pw, ur);
       if (data != null) {
         return data;
-      }else{
+      } else {
         throw Exception("session kosong");
       }
     } catch (e) {
       throw Exception("$e");
-    } 
+    }
   }
-  
+
   @override
-  Future<bool> ceklogin() async{
+  Future<bool> ceklogin() async {
     try {
       final data = await dataRemoteSource.statuslogin();
       return data;
@@ -95,14 +96,35 @@ class KotaRepositoryImpl implements KotaRepository {
       throw Exception(e.toString());
     }
   }
-  
+
   @override
-  Future<String> logout() async{
+  Future<String> logout() async {
     try {
       final data = await dataRemoteSource.signout();
       return data;
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+  @override
+  Future<KotaEntity> getOneKota(String id) async {
+    try {
+      final data = await dataRemoteSource.getOneKota(id);
+      return data.toEntity();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String> updateKota(KotaEntity data) async {
+    try {
+      final readydata = Kotamodel.fromEntity(data);
+      final response = await dataRemoteSource.updatedataKota(readydata);
+      return response;
+    } catch (e) {
+      rethrow;
     }
   }
 }

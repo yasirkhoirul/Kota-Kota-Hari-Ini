@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/appbaradmin.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/drawercontent.dart';
@@ -19,6 +18,7 @@ class _MainScaffoldAdminState extends State<MainScaffoldAdmin> {
     widget.navigationShell.goBranch(
       index,
       initialLocation: index == widget.navigationShell.currentIndex,
+      
     );
   }
   @override
@@ -34,7 +34,7 @@ class _MainScaffoldAdminState extends State<MainScaffoldAdmin> {
             drawer: MediaQuery.of(context).size.width>800?null:
             Drawer(
               backgroundColor: Colors.black,
-              child: Drawercontent(_gobranch)
+              child: DrawercontentAdmin(_gobranch)
             ),
             backgroundColor: Color(0xFF969393),
             appBar: AppBar(

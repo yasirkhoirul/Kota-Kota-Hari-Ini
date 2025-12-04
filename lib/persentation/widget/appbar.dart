@@ -34,7 +34,8 @@ class _AppbarsState extends State<Appbars> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text("logo",style: TextStyle(fontWeight: FontWeight.bold),),
+                    const Icon(Icons.share_location_rounded,color: Colors.white,),
+                    SizedBox(width: 10,),
                     const Text("kota kota hari ini",style: TextStyle(color: Colors.white),),
                   ],
                 ),
@@ -66,10 +67,10 @@ class _AppbarsState extends State<Appbars> {
                     ),child: const Text("Kota"),),
                     spasi,
                     TextButton(onPressed: () {
-                      
+                      widget.ontaps(4);
                     }, style: TextButton.styleFrom(
                       foregroundColor: Colors.white
-                    ),child: const Text("Upload"),),
+                    ),child: const Text("About"),),
                     spasi,
                     IconButton(onPressed: () {
                       widget.ontaps(1);

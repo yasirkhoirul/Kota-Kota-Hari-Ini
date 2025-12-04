@@ -86,7 +86,7 @@ class _ContentState extends State<Content> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ContentLeft(),
-                  Container(
+                  SizedBox(
                     height: 500,
                     child: ContentRight(widget: widget)),
                 ],

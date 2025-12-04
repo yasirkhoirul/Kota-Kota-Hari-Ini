@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
@@ -28,6 +27,10 @@ class UploadPageDartCubit extends Cubit<UploadPageDartState> {
     } catch (e) {
       emit(UploadPageDartError("Gagal mengambil gambar: $e"));
     }
+  }
+
+  void goinit(){
+    emit(UploadPageDartInitial());
   }
 
   Future<void> uploadForm(String id) async{
