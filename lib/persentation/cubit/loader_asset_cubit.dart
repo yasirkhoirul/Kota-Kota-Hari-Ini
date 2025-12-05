@@ -20,7 +20,6 @@ class LoaderAssetCubit extends Cubit<LoaderAssetState> {
           // 2. Paksa load bytes-nya ke memori sekarang
           // 'null' di sini adalah context (tidak wajib diisi untuk sekedar load bytes)
           await loader.loadBytes(null);
-          
         }),
         ...Images.pngImage.map((path) async {
           // precacheImage butuh context untuk tahu ukuran layar/pixel ratio
@@ -32,7 +31,8 @@ class LoaderAssetCubit extends Cubit<LoaderAssetState> {
       emit(LoaderAssetError(e.toString()));
     }
   }
-  bool checkWidth(BuildContext context){
-    return MediaQuery.of(context).size.width>800;
+
+  bool checkWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width > 800;
   }
 }

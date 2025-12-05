@@ -75,99 +75,104 @@ class _TambahkotaPageState extends State<TambahkotaPage> {
                 },
               ),
               const SizedBox(height: 20),
-          
+
               // --- Form Input ---
               TextFormField(
-                  controller: _namaController,
-                  decoration: const InputDecoration(labelText: "Nama Kota"),
-                  // Validator: Logika pengecekan
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Nama Kota tidak boleh kosong';
-                    }
-                    return null; // Null artinya valid
-                  },
+                controller: _namaController,
+                decoration: const InputDecoration(labelText: "Nama Kota"),
+                // Validator: Logika pengecekan
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Nama Kota tidak boleh kosong';
+                  }
+                  return null; // Null artinya valid
+                },
+              ),
+              const SizedBox(height: 10),
+
+              TextFormField(
+                controller: _deskripsiController,
+                decoration: const InputDecoration(
+                  labelText: "Deskripsi Singkat",
                 ),
-                const SizedBox(height: 10),
-          
-                TextFormField(
-                  controller: _deskripsiController,
-                  decoration: const InputDecoration(labelText: "Deskripsi Singkat"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Deskripsi Singkat tidak boleh kosong';
-                    }
-                    return null;
-                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Deskripsi Singkat tidak boleh kosong';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 10),
+
+              TextFormField(
+                controller: _deskripsipanjangController,
+                decoration: const InputDecoration(
+                  labelText: "Deskripsi Panjang",
                 ),
-                const SizedBox(height: 10),
-          
-                TextFormField(
-                  controller: _deskripsipanjangController,
-                  decoration: const InputDecoration(labelText: "Deskripsi Panjang"),
-                  maxLines: 3, // Biar agak lebar untuk deskripsi panjang
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Deskripsi Panjang tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-          
-                TextFormField(
-                  controller: _lokasiController,
-                  decoration: const InputDecoration(labelText: "Lokasi"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Lokasi tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 30),
-          
-                // --- Tombol Submit ---
-                BlocBuilder<TambahkotaCubit, TambahkotaState>(
-                  builder: (context, state) {
-                    if (state is TambahKotaPickGambar) {
-                      return ElevatedButton(
-                        onPressed: () {
-                          // 3. Cek Validasi di sini sebelum kirim data
-                          if (_formKey.currentState!.validate()) {
-                            // Jika Valid, baru jalankan logic kirim
-                            DateTime createdAt = DateTime.now();
-                            
-                            context.read<TambahkotaCubit>().tambahkotaform(
-                                  state.byte!,
-                                  _namaController.text,
-                                  state.mimeType!,
-                                  _deskripsiController.text,
-                                  _deskripsipanjangController.text,
-                                  createdAt.toString(),
-                                  _lokasiController.text,
-                                );
-                          }
-                        },
-                        child: const Text("Kirim"),
-                      );
-                    } else if (state is TambahkotaError) {
-                      return Column(
-                        children: [Text("Terjadi kesalahan: ${state.message}")],
-                      );
-                    } else if (state is TambahkotaLoading || state is TambahkotaLoadingUpGambar) {
-                      return Column(
-                        children: const [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 10),
-                          Text("Sedang memproses data..."),
-                        ],
-                      );
-                    } else {
-                      return Text(state.toString());
-                    }
-                  },
-                ),
+                maxLines: 3, // Biar agak lebar untuk deskripsi panjang
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Deskripsi Panjang tidak boleh kosong';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 10),
+
+              TextFormField(
+                controller: _lokasiController,
+                decoration: const InputDecoration(labelText: "Lokasi"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Lokasi tidak boleh kosong';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 30),
+
+              // --- Tombol Submit ---
+              BlocBuilder<TambahkotaCubit, TambahkotaState>(
+                builder: (context, state) {
+                  if (state is TambahKotaPickGambar) {
+                    return ElevatedButton(
+                      onPressed: () {
+                        // 3. Cek Validasi di sini sebelum kirim data
+                        if (_formKey.currentState!.validate()) {
+                          // Jika Valid, baru jalankan logic kirim
+                          DateTime createdAt = DateTime.now();
+
+                          context.read<TambahkotaCubit>().tambahkotaform(
+                            state.byte!,
+                            _namaController.text,
+                            state.mimeType!,
+                            _deskripsiController.text,
+                            _deskripsipanjangController.text,
+                            createdAt.toString(),
+                            _lokasiController.text,
+                          );
+                        }
+                      },
+                      child: const Text("Kirim"),
+                    );
+                  } else if (state is TambahkotaError) {
+                    return Column(
+                      children: [Text("Terjadi kesalahan: ${state.message}")],
+                    );
+                  } else if (state is TambahkotaLoading ||
+                      state is TambahkotaLoadingUpGambar) {
+                    return Column(
+                      children: const [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 10),
+                        Text("Sedang memproses data..."),
+                      ],
+                    );
+                  } else {
+                    return Text(state.toString());
+                  }
+                },
+              ),
             ],
           ),
         ),

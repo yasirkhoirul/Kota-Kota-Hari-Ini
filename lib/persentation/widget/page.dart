@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:go_router/go_router.dart';
@@ -48,7 +47,11 @@ class _PageItemState extends State<PageItem> {
               SizedBox(
                 height: 800,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 100,right: 100,left: 100),
+                  padding: const EdgeInsets.only(
+                    top: 100,
+                    right: 100,
+                    left: 100,
+                  ),
                   child: PageView.builder(
                     controller: _pageController,
                     itemCount: pageCount,
@@ -119,7 +122,9 @@ class _PageItemState extends State<PageItem> {
                               curve: Curves.easeInOut,
                             );
                           },
-                          icon: Center(child: Icon(Icons.arrow_back,color: Colors.white,)),
+                          icon: Center(
+                            child: Icon(Icons.arrow_back, color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
@@ -133,7 +138,7 @@ class _PageItemState extends State<PageItem> {
                               curve: Curves.easeInOut,
                             );
                           },
-                          icon: Icon(Icons.arrow_forward,color: Colors.white,),
+                          icon: Icon(Icons.arrow_forward, color: Colors.white),
                         ),
                       ),
                     ),
@@ -156,9 +161,11 @@ class ItemPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.pushNamed('detail', extra: data,pathParameters: {
-        'iddetail':data.id.toString()
-      }),
+      onTap: () => context.pushNamed(
+        'detail',
+        extra: data,
+        pathParameters: {'iddetail': data.id.toString()},
+      ),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
@@ -203,7 +210,10 @@ class ItemPage extends StatelessWidget {
                   color: Colors.white,
                   height: double.maxFinite,
                   width: 50,
-                  child: Heroes(data.id!, imageUrl:data.imagePath.isEmpty?'': data.imagePath[0])
+                  child: Heroes(
+                    data.id!,
+                    imageUrl: data.imagePath.isEmpty ? '' : data.imagePath[0],
+                  ),
                 ),
               ),
             ),

@@ -4,7 +4,7 @@ class Logout {
   final KotaRepository kotaRepository;
   const Logout(this.kotaRepository);
 
-  Future<String> execute(){
+  Future<String> execute() {
     return kotaRepository.logout();
   }
 }

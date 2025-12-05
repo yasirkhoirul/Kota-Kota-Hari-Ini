@@ -3,8 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
-import 'package:kota_kota_hari_ini/domain/usecase/get_one_kota.dart';
-import 'package:kota_kota_hari_ini/domain/usecase/update_kota.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/detail_kota_dart_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/update_kota_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/upload_page_dart_cubit.dart';
@@ -18,12 +16,11 @@ class MyDialog extends StatefulWidget {
 }
 
 class _MyDialogState extends State<MyDialog> {
-  
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<UpdateKotaCubit>().onUpdate(widget.kotaEntity);
-    },);
+    });
     super.initState();
   }
 
@@ -35,38 +32,46 @@ class _MyDialogState extends State<MyDialog> {
         child: Card(
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: BlocBuilder<UpdateKotaCubit,UpdateKotaState>(builder:(context, state) {
-              if (state is UpdateKotaLoaded) {
-                return SizedBox(
-                  height: 300,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            child: BlocBuilder<UpdateKotaCubit, UpdateKotaState>(
+              builder: (context, state) {
+                if (state is UpdateKotaLoaded) {
+                  return SizedBox(
+                    height: 300,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Berhasil di ganti"),
+                        ElevatedButton(
+                          onPressed: () {
+                            context.read<DetailKotaDartCubit>().onGetKota(
+                              widget.kotaEntity.id.toString(),
+                            );
+                            context.pop();
+                          },
+                          child: Text("close"),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (state is UpdateKotaError) {
+                  return Column(
                     children: [
-                      Text("Berhasil di ganti"),
-                      ElevatedButton(onPressed: (){
-                        context.read<DetailKotaDartCubit>().onGetKota(widget.kotaEntity.id.toString());
-                        context.pop();
-                      }, child: Text("close"))
+                      Text(state.message),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.pop();
+                        },
+                        child: Text("close"),
+                      ),
                     ],
-                  ),
-                );
-              }
-              else if(state is UpdateKotaError){
-                return Column(
-                  children: [
-                    Text(state.message),
-                    ElevatedButton(onPressed: (){
-                      context.pop();
-                    }, child: Text("close"))
-                  ],
-                );
-              }
-              else if(state is UpdateKotaLoading){
-                return CircularProgressIndicator();
-              }else{
-                return Container();
-              }
-            }, ),
+                  );
+                } else if (state is UpdateKotaLoading) {
+                  return CircularProgressIndicator();
+                } else {
+                  return Container();
+                }
+              },
+            ),
           ),
         ),
       ),
@@ -114,9 +119,9 @@ class MyDialogUpPhoto extends StatelessWidget {
                                   color: Colors.grey,
                                 ),
                         ),
-                    
+
                         const SizedBox(height: 20),
-                    
+
                         // --- Tombol Pilih Gambar ---
                         ElevatedButton.icon(
                           onPressed: context
@@ -125,9 +130,9 @@ class MyDialogUpPhoto extends StatelessWidget {
                           icon: const Icon(Icons.photo_library),
                           label: const Text("Pilih dari Galeri"),
                         ),
-                    
+
                         const SizedBox(height: 20),
-                    
+
                         // --- Tombol Upload ---
                         if (state.imageBytes != null)
                           ElevatedButton.icon(
@@ -180,7 +185,6 @@ class MyDialogUpPhoto extends StatelessWidget {
                           onPressed: () {
                             context.read<UploadPageDartCubit>().goinit();
                             Navigator.of(context).pop();
-                            
                           },
                           child: Text("cancel"),
                         ),
@@ -191,18 +195,20 @@ class MyDialogUpPhoto extends StatelessWidget {
                   return SizedBox(
                     height: 300,
                     child: Column(
-                        children: [
-                          const Text("upload sukses"),
-                          OutlinedButton(
-                            onPressed: () {
-                              context.read<DetailKotaDartCubit>().onGetKota(id.toString());
-                              context.read<UploadPageDartCubit>().goinit();
-                              context.pop();
-                            },
-                            child: Text("ok"),
-                          ),
-                        ],
-                      ),
+                      children: [
+                        const Text("upload sukses"),
+                        OutlinedButton(
+                          onPressed: () {
+                            context.read<DetailKotaDartCubit>().onGetKota(
+                              id.toString(),
+                            );
+                            context.read<UploadPageDartCubit>().goinit();
+                            context.pop();
+                          },
+                          child: Text("ok"),
+                        ),
+                      ],
+                    ),
                   );
                 } else {
                   return Center(child: CircularProgressIndicator());

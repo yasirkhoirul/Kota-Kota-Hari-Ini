@@ -5,7 +5,7 @@ class Uploadfotostorage {
   final KotaRepository kotaRepository;
   const Uploadfotostorage(this.kotaRepository);
 
-  Future<String> execute(Uint8List file ,  String path){
+  Future<String> execute(Uint8List file, String path) {
     return kotaRepository.uploadStorageFoto(file, path);
   }
 }

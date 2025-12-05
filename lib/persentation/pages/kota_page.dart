@@ -73,20 +73,31 @@ class _KotaPageState extends State<KotaPage> {
                       ),
                       tinggi
                           ? Positioned.fill(
-                              child: ContentBar(onSubmitted: (String p1) {
-
-                                context.read<SearchKotaCubit>().onSearch(p1);
-                                _controllerscroll.animateTo(_controllerscroll.position.maxScrollExtent, duration: Duration(seconds: 1), curve: Curves.easeInOutCubic);
-                              }),
+                              child: ContentBar(
+                                onSubmitted: (String p1) {
+                                  context.read<SearchKotaCubit>().onSearch(p1);
+                                  _controllerscroll.animateTo(
+                                    _controllerscroll.position.maxScrollExtent,
+                                    duration: Duration(seconds: 1),
+                                    curve: Curves.easeInOutCubic,
+                                  );
+                                },
+                              ),
                             )
                           : Positioned(
                               top: 0,
                               left: 0,
                               right: 0,
-                              child: ContentBar(onSubmitted: (String p1) {
-                                context.read<SearchKotaCubit>().onSearch(p1);
-                                _controllerscroll.animateTo(_controllerscroll.position.maxScrollExtent, duration: Duration(milliseconds: 1), curve: Curves.easeInOutCubic);
-                              }),
+                              child: ContentBar(
+                                onSubmitted: (String p1) {
+                                  context.read<SearchKotaCubit>().onSearch(p1);
+                                  _controllerscroll.animateTo(
+                                    _controllerscroll.position.maxScrollExtent,
+                                    duration: Duration(milliseconds: 1),
+                                    curve: Curves.easeInOutCubic,
+                                  );
+                                },
+                              ),
                             ),
                     ],
                   ),
@@ -169,7 +180,6 @@ class _KotaPageState extends State<KotaPage> {
                               );
                             });
 
-                            
                             return state.data.isEmpty
                                 ? Padding(
                                     padding: const EdgeInsets.all(20),
@@ -187,7 +197,6 @@ class _KotaPageState extends State<KotaPage> {
                   : SliverToBoxAdapter(
                       child: BlocBuilder<SearchKotaCubit, SearchKotaState>(
                         builder: (context, state) {
-                          
                           if (state is SearchKotaLoading) {
                             return Center(child: CircularProgressIndicator());
                           } else if (state is SearchKotaLoaded) {
@@ -217,20 +226,26 @@ class _KotaPageState extends State<KotaPage> {
                                             'detail',
                                             extra: state.data[index],
                                             pathParameters: {
-                                              'iddetail':state.data[index].id.toString()
-                                            }
+                                              'iddetail': state.data[index].id
+                                                  .toString(),
+                                            },
                                           ),
                                           leading: SizedBox(
-                                            height: 56
-                                            ,
+                                            height: 56,
                                             width: 56,
-                                            child: state.data[index].imagePath.isEmpty?Container(): 
-                                            Heroes(
-                                              state.data[index].id!,
-                                              imageUrl: state
-                                                  .data[index]
-                                                  .imagePath.first,
-                                            ),
+                                            child:
+                                                state
+                                                    .data[index]
+                                                    .imagePath
+                                                    .isEmpty
+                                                ? Container()
+                                                : Heroes(
+                                                    state.data[index].id!,
+                                                    imageUrl: state
+                                                        .data[index]
+                                                        .imagePath
+                                                        .first,
+                                                  ),
                                           ),
                                           title: Text(
                                             state.data[index].namaKota,

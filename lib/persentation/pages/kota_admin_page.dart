@@ -66,20 +66,20 @@ class _KotaAdminPageState extends State<KotaAdminPage> {
                       ? BlocConsumer<DeleteKotaCubit, DeleteKotaState>(
                           listener: (context, states) {
                             if (states is DeleteKotaLoading) {
-                            DialogUtils.showLoading(context);
-                          } else if (states is DeleteKotaLoaded) {
-                            DialogUtils.hide(context);
-                            DialogUtils.showSuccess(
-                              context,
-                              message: states.message,
-                              onPressed: () {
-                                context.read<SearchKotaCubit>().init();
-                              },
-                            );
-                          } else if (states is DeleteKotaError) {
-                            DialogUtils.hide(context);
-                            DialogUtils.showError(context, states.message);
-                          }
+                              DialogUtils.showLoading(context);
+                            } else if (states is DeleteKotaLoaded) {
+                              DialogUtils.hide(context);
+                              DialogUtils.showSuccess(
+                                context,
+                                message: states.message,
+                                onPressed: () {
+                                  context.read<SearchKotaCubit>().init();
+                                },
+                              );
+                            } else if (states is DeleteKotaError) {
+                              DialogUtils.hide(context);
+                              DialogUtils.showError(context, states.message);
+                            }
                           },
                           builder: (context, states) {
                             return SliverList.builder(
@@ -159,7 +159,12 @@ class _KotaAdminPageState extends State<KotaAdminPage> {
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              context.read<DeleteKotaCubit>().onDelet(state.data[index].id.toString());
+                                              context
+                                                  .read<DeleteKotaCubit>()
+                                                  .onDelet(
+                                                    state.data[index].id
+                                                        .toString(),
+                                                  );
                                             },
                                             child: Text(
                                               "Delete",

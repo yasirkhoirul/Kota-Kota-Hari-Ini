@@ -8,7 +8,7 @@ class DeleteKotaCubit extends Cubit<DeleteKotaState> {
   final DeleteKota deleteKota;
   DeleteKotaCubit(this.deleteKota) : super(DeleteKotaInitial());
 
-  void onDelet(String id)async{
+  void onDelet(String id) async {
     emit(DeleteKotaLoading());
     try {
       final data = await deleteKota.execute(id);

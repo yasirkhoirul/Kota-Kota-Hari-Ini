@@ -14,7 +14,6 @@ class AboutUsPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 20),
             child: Column(
-              
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -26,11 +25,12 @@ class AboutUsPage extends StatelessWidget {
                     fontSize: 32,
                   ),
                 ),
-            
+
                 Expanded(
                   child: LayoutBuilder(
                     builder: (context, contrains) {
-                      if (contrains.maxWidth > 759 && contrains.maxHeight>640) {
+                      if (contrains.maxWidth > 759 &&
+                          contrains.maxHeight > 640) {
                         return Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -41,17 +41,18 @@ class AboutUsPage extends StatelessWidget {
                           ],
                         );
                       } else {
-                        return ListView.builder(itemCount: 3,itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return ItemCard();
-                          }
-                          if (index == 1) {
-                            return ItemCard();
-                          }
-                          if (index == 2) {
-                            return ItemCard();
-                          }
-                        },);
+                        return ListView.builder(
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              return ItemCard();
+                            } else if (index == 1) {
+                              return ItemCard();
+                            } else {
+                              return ItemCard();
+                            }
+                          },
+                        );
                       }
                     },
                   ),
@@ -74,7 +75,7 @@ class ItemCard extends StatelessWidget {
       margin: EdgeInsets.all(20),
       child: SizedBox(
         width: 300,
-        
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

@@ -4,7 +4,7 @@ class GetStatusLogin {
   final KotaRepository kotaRepository;
   const GetStatusLogin(this.kotaRepository);
 
-  Future<bool> execute(){
+  Future<bool> execute() {
     return kotaRepository.ceklogin();
   }
 }

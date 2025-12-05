@@ -92,7 +92,7 @@ class DataRemoteSourceImpl implements DataRemoteSource {
       final String publicUrl = instance.storage
           .from('Galeri')
           .getPublicUrl(path);
-      print('Foto berhasil diupload: $publicUrl');
+
       await instance.rpc(
         'append_photo_url',
         params: {
@@ -184,7 +184,7 @@ class DataRemoteSourceImpl implements DataRemoteSource {
   @override
   Future<String> updatedataKota(Kotamodel data) async {
     try {
-      final update = await Supabase.instance.client
+      await Supabase.instance.client
           .from('Kota')
           .update({
             'nama_kota': data.nama_kota,
@@ -207,7 +207,8 @@ class DataRemoteSourceImpl implements DataRemoteSource {
 
     // GANTI 3 VARIABEL INI SESUAI PROYEK ANDA:
     final String tableName = 'Kota'; // Nama tabel
-    final String columnName = 'image_path'; // Nama kolom array// Nama bucket storage
+    final String columnName =
+        'image_path'; // Nama kolom array// Nama bucket storage
 
     try {
       // ---------------------------------------------
@@ -249,8 +250,9 @@ class DataRemoteSourceImpl implements DataRemoteSource {
 
       if (filePath.isNotEmpty) {
         // Supabase akan menghapus file di dalam folder uploads bucket Galeri
-        await Supabase.instance.client.storage.from(bucketName).remove([filePath]);
-        print("✅ File berhasil dihapus dari folder uploads: $filePath");
+        await Supabase.instance.client.storage.from(bucketName).remove([
+          filePath,
+        ]);
       }
     } catch (e) {
       throw Exception(e);
@@ -282,18 +284,18 @@ class DataRemoteSourceImpl implements DataRemoteSource {
   }
 
   @override
-  Future<String> deleteKota(String id)async{
+  Future<String> deleteKota(String id) async {
     try {
       final supabase = Supabase.instance.client;
       final data = await supabase.from("Kota").select().eq("id", id);
       if (data.isEmpty) {
         throw Exception("tidak ada data");
-      }else{
-        final dataimage  = Kotamodel.fromJson(data.first);
+      } else {
+        final dataimage = Kotamodel.fromJson(data.first);
         if (dataimage.image_path.isNotEmpty) {
           throw Exception("Image Harus Dihapus Semua");
-        }else{
-         final data =  await supabase.from("Kota").delete().eq("id", id);
+        } else {
+          final data = await supabase.from("Kota").delete().eq("id", id);
           return "Sukses menghapus ${dataimage.nama_kota} $data ";
         }
       }

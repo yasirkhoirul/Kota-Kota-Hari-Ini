@@ -35,7 +35,7 @@ class DialogUtils {
           TextButton(
             onPressed: () {
               hide(context); // Tutup dialog sukses
-              if (onPressed!=null) {
+              if (onPressed != null) {
                 onPressed();
               }
             },
@@ -55,10 +55,7 @@ class DialogUtils {
         title: const Text("Gagal"),
         content: Text(message),
         actions: [
-          TextButton(
-            onPressed: () => hide(context),
-            child: const Text("OK"),
-          ),
+          TextButton(onPressed: () => hide(context), child: const Text("OK")),
         ],
       ),
     );

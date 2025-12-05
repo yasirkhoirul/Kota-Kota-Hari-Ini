@@ -5,7 +5,7 @@ class GetOneKota {
   final KotaRepository kotaRepository;
   const GetOneKota(this.kotaRepository);
 
-  Future<KotaEntity> execute(String id){
+  Future<KotaEntity> execute(String id) {
     return kotaRepository.getOneKota(id);
   }
 }

@@ -6,7 +6,11 @@ class FullscreenImagePage extends StatelessWidget {
   final String imageUrl;
   final String tag;
 
-  const FullscreenImagePage({super.key, required this.imageUrl, required this.tag});
+  const FullscreenImagePage({
+    super.key,
+    required this.imageUrl,
+    required this.tag,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +21,7 @@ class FullscreenImagePage extends StatelessWidget {
         child: Center(
           child: Hero(
             tag: tag,
-            child: CachedNetworkImage(
-              imageUrl: imageUrl,
-              fit: BoxFit.fitWidth,
-            ),
+            child: CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.fitWidth),
           ),
         ),
       ),

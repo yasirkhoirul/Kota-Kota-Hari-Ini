@@ -13,9 +13,9 @@ class ContactUsPage extends StatelessWidget {
         if (constrains.maxHeight > 650) {
           return ContactBack();
         } else {
-          return SingleChildScrollView(child: SizedBox(
-            height: 650,
-            child: ContactBack()));
+          return SingleChildScrollView(
+            child: SizedBox(height: 650, child: ContactBack()),
+          );
         }
       },
     );
@@ -63,8 +63,8 @@ class ContentContactUs extends StatelessWidget {
   Widget build(BuildContext context) {
     return SlideInText(
       child: LayoutBuilder(
-        builder: (context,constrains) {
-          final bool iswidth = constrains.maxWidth>750;
+        builder: (context, constrains) {
+          final bool iswidth = constrains.maxWidth > 750;
           return Column(
             spacing: 10,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +85,7 @@ class ContentContactUs extends StatelessWidget {
                     "Contact",
                     style: GoogleFonts.robotoFlex(
                       color: Color(0xFFB7410E),
-                      fontSize: iswidth?32:16,
+                      fontSize: iswidth ? 32 : 16,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -93,7 +93,7 @@ class ContentContactUs extends StatelessWidget {
                     "Us",
                     style: GoogleFonts.robotoFlex(
                       color: Color.fromARGB(255, 0, 0, 0),
-                      fontSize: iswidth?32:16,
+                      fontSize: iswidth ? 32 : 16,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -103,7 +103,7 @@ class ContentContactUs extends StatelessWidget {
                 "ASK HOW",
                 style: GoogleFonts.robotoFlex(
                   color: Color(0xFF969693),
-                  fontSize: iswidth?96:45,
+                  fontSize: iswidth ? 96 : 45,
                   fontWeight: FontWeight.w900,
                 ),
               ),
@@ -111,7 +111,7 @@ class ContentContactUs extends StatelessWidget {
                 "WE CAN HELP \n YOU",
                 style: GoogleFonts.robotoFlex(
                   color: Color.fromARGB(255, 0, 0, 0),
-                  fontSize: iswidth?96:45,
+                  fontSize: iswidth ? 96 : 45,
                   fontWeight: FontWeight.w900,
                 ),
                 textAlign: TextAlign.center,
@@ -133,7 +133,7 @@ class ContentContactUs extends StatelessWidget {
               ),
             ],
           );
-        }
+        },
       ),
     );
   }

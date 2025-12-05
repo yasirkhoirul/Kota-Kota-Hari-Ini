@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Appbars extends StatefulWidget {
-  const Appbars({super.key, required this.height,required this.ontaps, required this.drawetaps});
+  const Appbars({
+    super.key,
+    required this.height,
+    required this.ontaps,
+    required this.drawetaps,
+  });
   final double height;
   final void Function(int) ontaps;
   final void Function() drawetaps;
@@ -14,16 +19,16 @@ class _AppbarsState extends State<Appbars> {
   late bool ismobile;
   @override
   Widget build(BuildContext context) {
-    final Widget spasi = SizedBox(width: 10,);
+    final Widget spasi = SizedBox(width: 10);
     return Container(
       color: Color(0xFF000000),
       height: widget.height,
       padding: EdgeInsets.symmetric(horizontal: 22),
       child: LayoutBuilder(
-        builder: (context,constrain) {
-          if (constrain.maxWidth>800) {
+        builder: (context, constrain) {
+          if (constrain.maxWidth > 800) {
             ismobile = false;
-          }else{
+          } else {
             ismobile = true;
           }
           return Row(
@@ -34,57 +39,81 @@ class _AppbarsState extends State<Appbars> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Icon(Icons.share_location_rounded,color: Colors.white,),
-                    SizedBox(width: 10,),
-                    const Text("kota kota hari ini",style: TextStyle(color: Colors.white),),
+                    const Icon(
+                      Icons.share_location_rounded,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 10),
+                    const Text(
+                      "kota kota hari ini",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
-              
 
-              ismobile?
-              IconButton(onPressed: widget.drawetaps, icon: Icon(Icons.menu,color: Colors.white,))
-              :Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(onPressed: () {
-                      widget.ontaps(0);
-                    }, style: TextButton.styleFrom(
-                      foregroundColor: Colors.white
-                    ),child: const Text("Home"),),
-                    spasi,
-                    TextButton(onPressed: () {
-                      widget.ontaps(3);
-                    }, style: TextButton.styleFrom(
-                      foregroundColor: Colors.white
-                    ),child: const Text("About"),),
-                    spasi,
-                    TextButton(onPressed: () {
-                      widget.ontaps(2);
-                    }, style: TextButton.styleFrom(
-                      foregroundColor: Colors.white
-                    ),child: const Text("Kota"),),
-                    spasi,
-                    TextButton(onPressed: () {
-                      widget.ontaps(4);
-                    }, style: TextButton.styleFrom(
-                      foregroundColor: Colors.white
-                    ),child: const Text("About"),),
-                    spasi,
-                    IconButton(onPressed: () {
-                      widget.ontaps(1);
-                    }, icon: Icon(Icons.person,color: Colors.white,)),
-                  ],
-                ),
-              ),
+              ismobile
+                  ? IconButton(
+                      onPressed: widget.drawetaps,
+                      icon: Icon(Icons.menu, color: Colors.white),
+                    )
+                  : Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              widget.ontaps(0);
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text("Home"),
+                          ),
+                          spasi,
+                          TextButton(
+                            onPressed: () {
+                              widget.ontaps(3);
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text("About"),
+                          ),
+                          spasi,
+                          TextButton(
+                            onPressed: () {
+                              widget.ontaps(2);
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text("Kota"),
+                          ),
+                          spasi,
+                          TextButton(
+                            onPressed: () {
+                              widget.ontaps(4);
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text("About"),
+                          ),
+                          spasi,
+                          IconButton(
+                            onPressed: () {
+                              widget.ontaps(1);
+                            },
+                            icon: Icon(Icons.person, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
             ],
           );
-        }
+        },
       ),
     );
   }
 }
-
-
-

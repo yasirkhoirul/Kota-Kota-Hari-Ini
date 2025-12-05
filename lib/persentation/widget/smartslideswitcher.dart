@@ -29,30 +29,29 @@ class _SmartSlideSwitcherState extends State<SmartSlideSwitcher> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 0  ),
+      duration: const Duration(milliseconds: 0),
       // Custom Transition
       transitionBuilder: (Widget child, Animation<double> animation) {
         // Tentukan arah: Jika index baru > index lama = Geser dari Kanan
         // Jika index baru < index lama = Geser dari Kiri
         final bool isMovingRight = widget.currentIndex > _prevIndex;
-        
-        final Offset begin = isMovingRight 
-            ? const Offset(1.0, 0.0)  // Dari Kanan
+
+        final Offset begin = isMovingRight
+            ? const Offset(1.0, 0.0) // Dari Kanan
             : const Offset(-1.0, 0.0); // Dari Kiri
 
         // Trik: Jika ini adalah widget yang sedang "keluar" (secondary animation),
         // kita perlu membalik arahnya agar terlihat alami.
         // Namun AnimatedSwitcher agak tricky.
-        
+
         // Alternatif Sederhana & Aman: Fade + Zoom atau Slide satu arah.
-        // Jika ingin Slide sempurna kiri-kanan, gunakan package 'animations' 
+        // Jika ingin Slide sempurna kiri-kanan, gunakan package 'animations'
         // atau kode di bawah ini:
-        
+
         return SlideTransition(
-          position: Tween<Offset>(
-            begin: begin,
-            end: Offset.zero,
-          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut)),
+          position: Tween<Offset>(begin: begin, end: Offset.zero).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+          ),
           child: child,
         );
       },

@@ -8,8 +8,7 @@ class DeleteImageCubit extends Cubit<DeleteImageState> {
   final DeleteImageKota deleteImageKota;
   DeleteImageCubit(this.deleteImageKota) : super(DeleteImageInitial());
 
-
-  void ondelete(int rowId, String urlToDelete)async{
+  void ondelete(int rowId, String urlToDelete) async {
     emit(DeleteImageLoading());
     try {
       await deleteImageKota.execute(rowId, urlToDelete);
@@ -18,5 +17,4 @@ class DeleteImageCubit extends Cubit<DeleteImageState> {
       emit(DeleteImageError(e.toString()));
     }
   }
-  
 }

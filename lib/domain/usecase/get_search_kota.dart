@@ -5,7 +5,7 @@ class GetSearchKota {
   final KotaRepository repository;
   const GetSearchKota(this.repository);
 
-  Future<List<KotaEntity>> execute(String query){
+  Future<List<KotaEntity>> execute(String query) {
     return repository.searchKota(query);
   }
 }

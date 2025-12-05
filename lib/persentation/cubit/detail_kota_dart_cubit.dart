@@ -9,8 +9,8 @@ class DetailKotaDartCubit extends Cubit<DetailKotaDartState> {
   final GetOneKota getOneKota;
   DetailKotaDartCubit(this.getOneKota) : super(DetailKotaDartInitial());
 
-  void onGetKota(String id)async{
-   emit(DetailKotaDartLoading());
+  void onGetKota(String id) async {
+    emit(DetailKotaDartLoading());
     try {
       final data = await getOneKota.execute(id);
       emit(DetailKotaDartLoaded(data));

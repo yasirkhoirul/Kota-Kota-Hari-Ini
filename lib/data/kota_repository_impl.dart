@@ -130,20 +130,16 @@ class KotaRepositoryImpl implements KotaRepository {
   @override
   Future<String> deletePhoto(int rowId, String urlToDelete) async {
     try {
-      await dataRemoteSource.deleteImage(
-        rowId,
-        urlToDelete,
-      );
-      await dataRemoteSource
-          .deleteImagefromBucket(rowId, urlToDelete);
+      await dataRemoteSource.deleteImage(rowId, urlToDelete);
+      await dataRemoteSource.deleteImagefromBucket(rowId, urlToDelete);
       return "sukses";
     } catch (e) {
       rethrow;
     }
   }
-  
+
   @override
-  Future<String> deleteKota(String id) async{
+  Future<String> deleteKota(String id) async {
     try {
       final response = await dataRemoteSource.deleteKota(id);
       return response;

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/auth_user_cubit.dart';
@@ -17,16 +15,15 @@ import 'package:kota_kota_hari_ini/persentation/pages/login_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/main_scaffold_admin.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/main_scaffold_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/tambahkota_page.dart';
-import 'package:kota_kota_hari_ini/persentation/pages/upload_page.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/dialog.dart';
 import 'package:logger/web.dart';
 
 class Approute {
   // Inisialisasi Listener
   static GoRouter myRouter(AuthUserCubit authCubitInstance) {
-    final _rootNavigatorKey = GlobalKey<NavigatorState>();
+    final rootNavigatorKey = GlobalKey<NavigatorState>();
     return GoRouter(
-      navigatorKey: _rootNavigatorKey,
+      navigatorKey: rootNavigatorKey,
       refreshListenable: CubitListenable(authCubitInstance),
       routes: <RouteBase>[
         GoRoute(
@@ -90,7 +87,7 @@ class Approute {
                         GoRoute(
                           path: 'editpage/:childId',
                           name: 'editpage',
-                          parentNavigatorKey: _rootNavigatorKey,
+                          parentNavigatorKey: rootNavigatorKey,
                           pageBuilder: (context, state) {
                             final childId = state.pathParameters['childId']!;
                             return CustomTransitionPage(

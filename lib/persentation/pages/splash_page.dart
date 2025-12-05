@@ -12,7 +12,7 @@ class MySplashScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Bisa ganti logo aplikasi Anda di sini
-            FlutterLogo(size: 100), 
+            FlutterLogo(size: 100),
             SizedBox(height: 20),
             CircularProgressIndicator(),
             SizedBox(height: 10),

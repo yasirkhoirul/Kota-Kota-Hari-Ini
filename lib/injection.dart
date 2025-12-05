@@ -28,39 +28,45 @@ import 'package:kota_kota_hari_ini/persentation/provider/kota_notifier.dart';
 
 final GetIt getIt = GetIt.instance;
 
-void init(){
+void init() {
   //image instance
-  getIt.registerLazySingleton<ImagePicker>(() => ImagePicker(),);
+  getIt.registerLazySingleton<ImagePicker>(() => ImagePicker());
 
   //repository
-  getIt.registerLazySingleton<KotaRepository>(() => KotaRepositoryImpl(dataRemoteSource: getIt()),);
+  getIt.registerLazySingleton<KotaRepository>(
+    () => KotaRepositoryImpl(dataRemoteSource: getIt()),
+  );
 
   //usecase
-  getIt.registerLazySingleton(() => GetAllKota(repository: getIt()),);
-  getIt.registerLazySingleton(() => GetSearchKota(getIt()),);
-  getIt.registerLazySingleton(() => PostKota(kotaRepository: getIt()),);
-  getIt.registerLazySingleton(() => Uploadfotostorage(getIt()),);
-  getIt.registerLazySingleton(() => Tambahkota(getIt()),);
-  getIt.registerLazySingleton(() => Login(getIt()),);
-  getIt.registerLazySingleton(() => GetStatusLogin(getIt()),);
-  getIt.registerLazySingleton(() => Logout(getIt()),);
-  getIt.registerLazySingleton(() => GetOneKota(getIt()),);
-  getIt.registerLazySingleton(() => UpdateKota(getIt()),);
-  getIt.registerLazySingleton(() => DeleteImageKota(getIt()),);
-  getIt.registerLazySingleton(() => DeleteKota(getIt()),);
+  getIt.registerLazySingleton(() => GetAllKota(repository: getIt()));
+  getIt.registerLazySingleton(() => GetSearchKota(getIt()));
+  getIt.registerLazySingleton(() => PostKota(kotaRepository: getIt()));
+  getIt.registerLazySingleton(() => Uploadfotostorage(getIt()));
+  getIt.registerLazySingleton(() => Tambahkota(getIt()));
+  getIt.registerLazySingleton(() => Login(getIt()));
+  getIt.registerLazySingleton(() => GetStatusLogin(getIt()));
+  getIt.registerLazySingleton(() => Logout(getIt()));
+  getIt.registerLazySingleton(() => GetOneKota(getIt()));
+  getIt.registerLazySingleton(() => UpdateKota(getIt()));
+  getIt.registerLazySingleton(() => DeleteImageKota(getIt()));
+  getIt.registerLazySingleton(() => DeleteKota(getIt()));
 
   //dataremotsource
-  getIt.registerLazySingleton<DataRemoteSource>(() => DataRemoteSourceImpl(),);
+  getIt.registerLazySingleton<DataRemoteSource>(() => DataRemoteSourceImpl());
 
   //provider
-  getIt.registerFactory(() => KotaNotifier(getAllKota: getIt()),);
-  getIt.registerFactory(() => LoaderAssetCubit(),);
-  getIt.registerFactory(() => SearchKotaCubit(getIt(), getAllKota: getIt()),);
-  getIt.registerFactory(() => UploadPageDartCubit(getIt(), kota: getIt()),);
-  getIt.registerFactory(() => TambahkotaCubit(getIt(), getIt(), imagePicker: getIt()),);
-  getIt.registerFactory(() => AuthUserCubit(getIt(), getStatusLogin: getIt(), logout: getIt()),);
-  getIt.registerFactory(() => DetailKotaDartCubit(getIt()),);
-  getIt.registerFactory(() => UpdateKotaCubit(getIt()),);
-  getIt.registerFactory(() => DeleteImageCubit(getIt()),);
-  getIt.registerFactory(() => DeleteKotaCubit(getIt()),);
+  getIt.registerFactory(() => KotaNotifier(getAllKota: getIt()));
+  getIt.registerFactory(() => LoaderAssetCubit());
+  getIt.registerFactory(() => SearchKotaCubit(getIt(), getAllKota: getIt()));
+  getIt.registerFactory(() => UploadPageDartCubit(getIt(), kota: getIt()));
+  getIt.registerFactory(
+    () => TambahkotaCubit(getIt(), getIt(), imagePicker: getIt()),
+  );
+  getIt.registerFactory(
+    () => AuthUserCubit(getIt(), getStatusLogin: getIt(), logout: getIt()),
+  );
+  getIt.registerFactory(() => DetailKotaDartCubit(getIt()));
+  getIt.registerFactory(() => UpdateKotaCubit(getIt()));
+  getIt.registerFactory(() => DeleteImageCubit(getIt()));
+  getIt.registerFactory(() => DeleteKotaCubit(getIt()));
 }

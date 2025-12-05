@@ -375,8 +375,9 @@ class _EditContentTextState extends State<EditContentText> {
                                       context.pushNamed(
                                         'editpage',
                                         pathParameters: {
-                                          'id':"$id",
-                                          'childId': '$id'},
+                                          'id': "$id",
+                                          'childId': '$id',
+                                        },
                                       );
                                     },
                                     child: Text(

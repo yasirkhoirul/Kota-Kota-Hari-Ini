@@ -5,7 +5,7 @@ class Login {
   final KotaRepository kotaRepository;
   const Login(this.kotaRepository);
 
-  Future<Session> execute(String ur, String pw){
+  Future<Session> execute(String ur, String pw) {
     return kotaRepository.login(ur, pw);
   }
 }

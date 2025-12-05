@@ -13,24 +13,26 @@ class TambahkotaCubit extends Cubit<TambahkotaState> {
   final ImagePicker imagePicker;
   final Uploadfotostorage uploadfotostorage;
   final Tambahkota tambahkota;
-  TambahkotaCubit(this.uploadfotostorage, this.tambahkota, {required this.imagePicker})
-    : super(TambahkotaInitial());
-
+  TambahkotaCubit(
+    this.uploadfotostorage,
+    this.tambahkota, {
+    required this.imagePicker,
+  }) : super(TambahkotaInitial());
 
   Future<void> pickImage() async {
     try {
       // Pilih dari Galeri (Ganti ImageSource.camera jika ingin dari kamera)
       final XFile? pickedFile = await imagePicker.pickImage(
-        source: ImageSource.gallery, 
+        source: ImageSource.gallery,
         imageQuality: 80, // Kompresi sedikit agar file tidak terlalu besar
       );
 
       if (pickedFile != null) {
         final bytes = await pickedFile.readAsBytes();
-        emit(TambahKotaPickGambar(pickedFile.mimeType,bytes));
+        emit(TambahKotaPickGambar(pickedFile.mimeType, bytes));
       }
     } catch (e) {
-      emit(TambahkotaError(message:  "Gagal mengambil gambar: $e"));
+      emit(TambahkotaError(message: "Gagal mengambil gambar: $e"));
     }
   }
 

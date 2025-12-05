@@ -67,6 +67,7 @@ class Drawercontent extends StatelessWidget {
           children: [
             IconButton(
               onPressed: () {
+                Navigator.pop(context);
                 _gobranch(1);
               },
               icon: Icon(Icons.person, color: Colors.white),
@@ -77,6 +78,7 @@ class Drawercontent extends StatelessWidget {
     );
   }
 }
+
 class DrawercontentAdmin extends StatelessWidget {
   final Function(int) _gobranch;
   const DrawercontentAdmin(this._gobranch, {super.key});
@@ -114,9 +116,12 @@ class DrawercontentAdmin extends StatelessWidget {
         spasi,
         Row(
           children: [
-            IconButton(onPressed: () {
-                      context.read<AuthUserCubit>().gologout();
-                    }, icon: Icon(Icons.logout,color: Colors.white,)),
+            IconButton(
+              onPressed: () {
+                context.read<AuthUserCubit>().gologout();
+              },
+              icon: Icon(Icons.logout, color: Colors.white),
+            ),
           ],
         ),
       ],

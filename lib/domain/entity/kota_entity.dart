@@ -6,5 +6,13 @@ class KotaEntity {
   final List<String> imagePath;
   final String createdAt;
   final String lokasi;
-  KotaEntity(this.id, this.namaKota, this.deskripsiSingkat, this.deskripsiPanjang, this.imagePath, this.createdAt, this.lokasi);
+  KotaEntity(
+    this.id,
+    this.namaKota,
+    this.deskripsiSingkat,
+    this.deskripsiPanjang,
+    this.imagePath,
+    this.createdAt,
+    this.lokasi,
+  );
 }

@@ -20,12 +20,8 @@ abstract class KotaRepository {
     String created,
     String lokasi,
   );
-  Future<String> updateKota(
-    KotaEntity data
-  );
+  Future<String> updateKota(KotaEntity data);
 
-  Future<String> deletePhoto(
-   int rowId, String urlToDelete
-  );
+  Future<String> deletePhoto(int rowId, String urlToDelete);
   Future<String> deleteKota(String id);
 }

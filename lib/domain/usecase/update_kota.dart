@@ -5,7 +5,7 @@ class UpdateKota {
   final KotaRepository kotaRepository;
   const UpdateKota(this.kotaRepository);
 
-  Future<String> execute(KotaEntity data) async{
+  Future<String> execute(KotaEntity data) async {
     return kotaRepository.updateKota(data);
   }
 }

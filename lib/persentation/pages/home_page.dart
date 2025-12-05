@@ -86,9 +86,7 @@ class _ContentState extends State<Content> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ContentLeft(),
-                  SizedBox(
-                    height: 500,
-                    child: ContentRight(widget: widget)),
+                  SizedBox(height: 500, child: ContentRight(widget: widget)),
                 ],
               ),
             ),
@@ -108,7 +106,7 @@ class ContentRight extends StatelessWidget {
   Widget build(BuildContext context) {
     final datalrbar = MediaQuery.of(context).size.width;
     return Padding(
-      padding: EdgeInsets.only(bottom: 50,top: datalrbar<900?0:50),
+      padding: EdgeInsets.only(bottom: 50, top: datalrbar < 900 ? 0 : 50),
       child: Consumer<KotaNotifier>(
         builder: (context, value, chlid) {
           if (value.statuskota == RequestState.loaded) {
@@ -120,28 +118,33 @@ class ContentRight extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 5,
-                    child: (value.datakota.length<3)?Container(): 
-                    CarouselSlider(
-                      carouselController: widget.controllercarausel,
-                      items: value.datakota.asMap().entries.take(3).map((e) {
-                        final int index = e.key;
-                        return Builder(
-                          builder: (context) {
-                            return ItemCoarsel(index: index, e: e);
-                          },
-                        );
-                      }).toList(),
-                      options: CarouselOptions(
-                        onPageChanged: (index, reason) =>
-                            value.setCorselindex(index),
-                        enlargeCenterPage: true,
-                        autoPlay: true,
-                       height: double.infinity,
-                        autoPlayCurve: Curves.fastOutSlowIn,
-                        autoPlayAnimationDuration: Duration(milliseconds: 800),
-                        viewportFraction: datalrbar >= 900 ? 0.3 : 0.7,
-                      ),
-                    ),
+                    child: (value.datakota.length < 3)
+                        ? Container()
+                        : CarouselSlider(
+                            carouselController: widget.controllercarausel,
+                            items: value.datakota.asMap().entries.take(3).map((
+                              e,
+                            ) {
+                              final int index = e.key;
+                              return Builder(
+                                builder: (context) {
+                                  return ItemCoarsel(index: index, e: e);
+                                },
+                              );
+                            }).toList(),
+                            options: CarouselOptions(
+                              onPageChanged: (index, reason) =>
+                                  value.setCorselindex(index),
+                              enlargeCenterPage: true,
+                              autoPlay: true,
+                              height: double.infinity,
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              autoPlayAnimationDuration: Duration(
+                                milliseconds: 800,
+                              ),
+                              viewportFraction: datalrbar >= 900 ? 0.3 : 0.7,
+                            ),
+                          ),
                   ),
                   Flexible(
                     child: IndicatorCroasel(
@@ -182,9 +185,11 @@ class ItemCoarsel extends StatelessWidget {
         child: InkWell(
           onTap: context.watch<KotaNotifier>().indexcorsel == index
               ? () {
-                  context.pushNamed('detail',extra: e.value,pathParameters: {
-                    'iddetail': e.value.id.toString()
-                  });
+                  context.pushNamed(
+                    'detail',
+                    extra: e.value,
+                    pathParameters: {'iddetail': e.value.id.toString()},
+                  );
                 }
               : null,
           child: Stack(
@@ -194,7 +199,8 @@ class ItemCoarsel extends StatelessWidget {
                   borderRadius: BorderRadiusGeometry.circular(15),
                   child: CachedNetworkImage(
                     imageUrl: e.value.imagePath[0],
-                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                    placeholder: (context, url) =>
+                        Center(child: CircularProgressIndicator()),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                     fit: BoxFit.cover,
                   ),
@@ -305,7 +311,7 @@ class ContentLeft extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(40),
       child: LayoutBuilder(
-        builder: (context,contrains) {
+        builder: (context, contrains) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -314,7 +320,7 @@ class ContentLeft extends StatelessWidget {
                 tag: "line",
                 child: Container(
                   height: 5,
-                  width: contrains.maxWidth<540?64:114,
+                  width: contrains.maxWidth < 540 ? 64 : 114,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(2),
                     color: Colors.white,
@@ -326,7 +332,7 @@ class ContentLeft extends StatelessWidget {
                 child: Text(
                   "Selamat Datang",
                   style: GoogleFonts.robotoFlex(
-                    fontSize: contrains.maxWidth<540?16:32,
+                    fontSize: contrains.maxWidth < 540 ? 16 : 32,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -341,7 +347,7 @@ class ContentLeft extends StatelessWidget {
                   ),
                   "KOTA KOTA",
                   style: GoogleFonts.robotoFlex(
-                    fontSize: contrains.maxWidth<540?48:96,
+                    fontSize: contrains.maxWidth < 540 ? 48 : 96,
                     fontWeight: FontWeight.w900,
                     color: Colors.white,
                     height: 0,
@@ -357,7 +363,7 @@ class ContentLeft extends StatelessWidget {
                   ),
                   "HARI INI",
                   style: GoogleFonts.robotoFlex(
-                    fontSize: contrains.maxWidth<540?48:96,
+                    fontSize: contrains.maxWidth < 540 ? 48 : 96,
                     fontWeight: FontWeight.w900,
                     color: Colors.black,
                     height: 0,
@@ -403,7 +409,7 @@ intinya si webnya menjabarkan nilai historis dari kota kota di indonsia""",
               ),
             ],
           );
-        }
+        },
       ),
     );
   }

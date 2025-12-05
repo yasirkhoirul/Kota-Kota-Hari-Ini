@@ -10,9 +10,10 @@ part 'search_kota_state.dart';
 class SearchKotaCubit extends Cubit<SearchKotaState> {
   final GetSearchKota getSearchKota;
   final GetAllKota getAllKota;
-  SearchKotaCubit(this.getSearchKota, {required this.getAllKota}) : super(SearchKotaInitial());
+  SearchKotaCubit(this.getSearchKota, {required this.getAllKota})
+    : super(SearchKotaInitial());
 
-  void onSearch(String query)async{
+  void onSearch(String query) async {
     emit(SearchKotaLoading());
     try {
       final response = await getSearchKota.execute(query);
@@ -22,7 +23,7 @@ class SearchKotaCubit extends Cubit<SearchKotaState> {
     }
   }
 
-  void init() async{
+  void init() async {
     Logger().d("masuk init");
     emit(SearchKotaLoading());
     try {

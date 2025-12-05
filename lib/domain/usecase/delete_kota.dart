@@ -4,7 +4,7 @@ class DeleteKota {
   final KotaRepository kotaRepository;
   const DeleteKota(this.kotaRepository);
 
-  Future<String> execute(String id) async{
+  Future<String> execute(String id) async {
     return kotaRepository.deleteKota(id);
   }
 }
