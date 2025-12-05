@@ -6,11 +6,9 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kota_kota_hari_ini/common/dialog.dart';
 import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
-import 'package:kota_kota_hari_ini/domain/usecase/update_kota.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/delete_image_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/detail_kota_dart_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/update_kota_cubit.dart';
-import 'package:kota_kota_hari_ini/persentation/cubit/upload_page_dart_cubit.dart';
 import 'package:logger/web.dart';
 
 class EditPage extends StatefulWidget {

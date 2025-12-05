@@ -9,6 +9,7 @@ import 'package:kota_kota_hari_ini/persentation/pages/about_us_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/contact_us_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/detail_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/edit_page.dart';
+import 'package:kota_kota_hari_ini/persentation/pages/fullscreenpage.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/home_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/kota_admin_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/kota_page.dart';
@@ -29,12 +30,31 @@ class Approute {
       refreshListenable: CubitListenable(authCubitInstance),
       routes: <RouteBase>[
         GoRoute(
-          path: '/detail',
+          path: '/detail/:iddetail',
+          name: 'detail',
           builder: (context, state) {
-            final data = state.extra as KotaEntity;
-            return DetailPage(data: data);
+            final id = state.pathParameters['iddetail'];
+            return DetailPage(
+              data: state.extra != null ? state.extra as KotaEntity : null,
+              id: id!,
+            );
           },
+          routes: [
+            GoRoute(
+              path: '/fullscreen/:url/:tag',
+              name: 'fullscreen',
+              builder: (context, state) {
+                final imageUrl = state.pathParameters['url'];
+                final tag = state.pathParameters['tag'];
+                return FullscreenImagePage(
+                  imageUrl: imageUrl ?? '',
+                  tag: tag ?? '',
+                );
+              },
+            ),
+          ],
         ),
+
         GoRoute(
           path: '/update',
           builder: (context, state) {

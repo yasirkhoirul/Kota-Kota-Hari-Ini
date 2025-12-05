@@ -213,9 +213,12 @@ class _KotaPageState extends State<KotaPage> {
                                       itemBuilder: (context, index) => Card(
                                         color: Colors.white,
                                         child: ListTile(
-                                          onTap: () => context.push(
-                                            '/detail',
+                                          onTap: () => context.pushNamed(
+                                            'detail',
                                             extra: state.data[index],
+                                            pathParameters: {
+                                              'iddetail':state.data[index].id.toString()
+                                            }
                                           ),
                                           leading: SizedBox(
                                             height: 56

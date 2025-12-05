@@ -156,7 +156,9 @@ class ItemPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.push('/detail', extra: data),
+      onTap: () => context.pushNamed('detail', extra: data,pathParameters: {
+        'iddetail':data.id.toString()
+      }),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(

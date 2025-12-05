@@ -180,6 +180,7 @@ class MyDialogUpPhoto extends StatelessWidget {
                           onPressed: () {
                             context.read<UploadPageDartCubit>().goinit();
                             Navigator.of(context).pop();
+                            
                           },
                           child: Text("cancel"),
                         ),

@@ -182,7 +182,9 @@ class ItemCoarsel extends StatelessWidget {
         child: InkWell(
           onTap: context.watch<KotaNotifier>().indexcorsel == index
               ? () {
-                  context.push('/detail',extra: e.value);
+                  context.pushNamed('detail',extra: e.value,pathParameters: {
+                    'iddetail': e.value.id.toString()
+                  });
                 }
               : null,
           child: Stack(
