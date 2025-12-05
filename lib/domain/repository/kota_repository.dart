@@ -27,4 +27,5 @@ abstract class KotaRepository {
   Future<String> deletePhoto(
    int rowId, String urlToDelete
   );
+  Future<String> deleteKota(String id);
 }

@@ -141,4 +141,14 @@ class KotaRepositoryImpl implements KotaRepository {
       rethrow;
     }
   }
+  
+  @override
+  Future<String> deleteKota(String id) async{
+    try {
+      final response = await dataRemoteSource.deleteKota(id);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

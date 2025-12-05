@@ -24,6 +24,7 @@ abstract class DataRemoteSource {
   Future<String> deleteImage(int rowId, String urltoDelete);
   Future<void> deleteImagefromBucket(int rowId, String urlToDelete);
   String getPathFromUrl(String fullUrl, String bucketName);
+  Future<String> deleteKota(String id);
 }
 
 class DataRemoteSourceImpl implements DataRemoteSource {
@@ -277,6 +278,27 @@ class DataRemoteSourceImpl implements DataRemoteSource {
       return '';
     } catch (e) {
       return '';
+    }
+  }
+
+  @override
+  Future<String> deleteKota(String id)async{
+    try {
+      final supabase = Supabase.instance.client;
+      final data = await supabase.from("Kota").select().eq("id", id);
+      if (data.isEmpty) {
+        throw Exception("tidak ada data");
+      }else{
+        final dataimage  = Kotamodel.fromJson(data.first);
+        if (dataimage.image_path.isNotEmpty) {
+          throw Exception("Image Harus Dihapus Semua");
+        }else{
+         final data =  await supabase.from("Kota").delete().eq("id", id);
+          return "Sukses menghapus ${dataimage.nama_kota} $data ";
+        }
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

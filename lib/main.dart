@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:kota_kota_hari_ini/data/database/supabase.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/auth_user_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/delete_image_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/delete_kota_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/detail_kota_dart_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/loader_asset_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/search_kota_cubit.dart';
@@ -37,6 +38,7 @@ void main() async {
         BlocProvider(create: (context) => getisinstance<DetailKotaDartCubit>(),),
         BlocProvider(create: (context) => getisinstance<UpdateKotaCubit>(),),
         BlocProvider(create: (context) => getisinstance<DeleteImageCubit>(),),
+        BlocProvider(create: (context) => getisinstance<DeleteKotaCubit>(),),
         BlocProvider(create: (context) => getisinstance<AuthUserCubit>()..getstatuslogin(),),
       ],
       child: const MainApp(),

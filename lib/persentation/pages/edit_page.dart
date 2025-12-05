@@ -374,7 +374,7 @@ class _EditContentTextState extends State<EditContentText> {
                                     ),
                                     onPressed: () {
                                       final id = widget.kotaEntity.id;
-                                      context.goNamed(
+                                      context.pushNamed(
                                         'editpage',
                                         pathParameters: {
                                           'id':"$id",

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kota_kota_hari_ini/common/dialog.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/delete_kota_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/search_kota_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/sliverheader.dart';
 
@@ -61,84 +63,117 @@ class _KotaAdminPageState extends State<KotaAdminPage> {
                         )
                       : SliverToBoxAdapter(child: Container()),
                   state is SearchKotaLoaded && state.data.isNotEmpty
-                      ? SliverList.builder(
-                          itemCount: state.data.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              color: Colors.black,
-                              child: ListTile(
-                                leading: Container(
-                                  height: 56,
-                                  width: 56,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                  ),
+                      ? BlocConsumer<DeleteKotaCubit, DeleteKotaState>(
+                          listener: (context, states) {
+                            if (states is DeleteKotaLoading) {
+                            DialogUtils.showLoading(context);
+                          } else if (states is DeleteKotaLoaded) {
+                            DialogUtils.hide(context);
+                            DialogUtils.showSuccess(
+                              context,
+                              message: states.message,
+                              onPressed: () {
+                                context.read<SearchKotaCubit>().init();
+                              },
+                            );
+                          } else if (states is DeleteKotaError) {
+                            DialogUtils.hide(context);
+                            DialogUtils.showError(context, states.message);
+                          }
+                          },
+                          builder: (context, states) {
+                            return SliverList.builder(
+                              itemCount: state.data.length,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  color: Colors.black,
+                                  child: ListTile(
+                                    leading: Container(
+                                      height: 56,
+                                      width: 56,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                      ),
 
-                                  child: state.data[index].imagePath.isNotEmpty
-                                      ? CachedNetworkImage(
-                                          placeholder: (context, url) => Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              Center(child: Icon(Icons.error)),
-                                          imageUrl:
-                                              state.data[index].imagePath.first,
-                                        )
-                                      : Icon(Icons.error),
-                                ),
-                                title: Text(
-                                  state.data[index].namaKota,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.robotoFlex(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  state.data[index].deskripsiSingkat,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.robotoFlex(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                trailing: SizedBox(
-                                  width: 130,
-                                  child: Row(
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          context.goNamed(
-                                            'edit',
-                                            pathParameters: {
-                                              'id': "${state.data[index].id}",
+                                      child:
+                                          state.data[index].imagePath.isNotEmpty
+                                          ? CachedNetworkImage(
+                                              placeholder: (context, url) => Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Center(
+                                                        child: Icon(
+                                                          Icons.error,
+                                                        ),
+                                                      ),
+                                              imageUrl: state
+                                                  .data[index]
+                                                  .imagePath
+                                                  .first,
+                                            )
+                                          : Icon(Icons.error),
+                                    ),
+                                    title: Text(
+                                      state.data[index].namaKota,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.robotoFlex(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      state.data[index].deskripsiSingkat,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.robotoFlex(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                    trailing: SizedBox(
+                                      width: 130,
+                                      child: Row(
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {
+                                              context.goNamed(
+                                                'edit',
+                                                pathParameters: {
+                                                  'id':
+                                                      "${state.data[index].id}",
+                                                },
+                                              );
                                             },
-                                          );
-                                        },
-                                        child: Text(
-                                          "Edit",
-                                          style: GoogleFonts.robotoFlex(
-                                            color: Colors.white,
+                                            child: Text(
+                                              "Edit",
+                                              style: GoogleFonts.robotoFlex(
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          "Delete",
-                                          style: GoogleFonts.robotoFlex(
-                                            color: Colors.red,
+                                          TextButton(
+                                            onPressed: () {
+                                              context.read<DeleteKotaCubit>().onDelet(state.data[index].id.toString());
+                                            },
+                                            child: Text(
+                                              "Delete",
+                                              style: GoogleFonts.robotoFlex(
+                                                color: Colors.red,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                             );
                           },
                         )

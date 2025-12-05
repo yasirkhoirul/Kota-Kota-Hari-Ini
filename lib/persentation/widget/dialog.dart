@@ -179,12 +179,7 @@ class MyDialogUpPhoto extends StatelessWidget {
                         OutlinedButton(
                           onPressed: () {
                             context.read<UploadPageDartCubit>().goinit();
-                            context.replaceNamed(
-                              'edit',
-                              pathParameters: {
-                                'id':"$id"
-                              }
-                            );
+                            Navigator.of(context).pop();
                           },
                           child: Text("cancel"),
                         ),
