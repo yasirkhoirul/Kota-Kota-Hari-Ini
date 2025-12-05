@@ -21,6 +21,9 @@ abstract class DataRemoteSource {
     String lokasi,
   );
   Future<String> updatedataKota(Kotamodel data);
+  Future<String> deleteImage(int rowId, String urltoDelete);
+  Future<void> deleteImagefromBucket(int rowId, String urlToDelete);
+  String getPathFromUrl(String fullUrl, String bucketName);
 }
 
 class DataRemoteSourceImpl implements DataRemoteSource {
@@ -191,9 +194,89 @@ class DataRemoteSourceImpl implements DataRemoteSource {
           })
           .eq('id', data.id);
 
-      return "Berhasil update: $update";
+      return "Berhasil update";
     } catch (error) {
       throw Exception(error);
+    }
+  }
+
+  @override
+  Future<String> deleteImage(int rowId, String urlToDelete) async {
+    final supabase = Supabase.instance.client;
+
+    // GANTI 3 VARIABEL INI SESUAI PROYEK ANDA:
+    final String tableName = 'Kota'; // Nama tabel
+    final String columnName = 'image_path'; // Nama kolom array// Nama bucket storage
+
+    try {
+      // ---------------------------------------------
+      // TAHAP A: UPDATE DATABASE (Hapus URL dari Array)
+      // ---------------------------------------------
+
+      // 1. Ambil data array saat ini
+      final data = await supabase
+          .from(tableName)
+          .select(columnName)
+          .eq('id', rowId)
+          .single();
+
+      List<dynamic> currentUrls = List.from(data[columnName] ?? []);
+      List<dynamic> newUrls = currentUrls
+          .where((url) => url != urlToDelete)
+          .toList();
+      await supabase
+          .from(tableName)
+          .update({columnName: newUrls})
+          .eq('id', rowId);
+
+      ///
+      return "sukses delete di tabel";
+      //
+    } catch (e) {
+      throw Exception(e);
+      // Tampilkan snackbar error disini jika perlu
+    }
+  }
+
+  @override
+  Future<void> deleteImagefromBucket(int rowId, String urlToDelete) async {
+    final String bucketName = 'Galeri';
+    try {
+      // 1. Helper function tadi otomatis akan mendeteksi folder 'uploads'
+      // Hasil filePath nanti akan menjadi: "uploads/1764752418337.jpg"
+      String filePath = getPathFromUrl(urlToDelete, bucketName);
+
+      if (filePath.isNotEmpty) {
+        // Supabase akan menghapus file di dalam folder uploads bucket Galeri
+        await Supabase.instance.client.storage.from(bucketName).remove([filePath]);
+        print("✅ File berhasil dihapus dari folder uploads: $filePath");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  String getPathFromUrl(String fullUrl, String bucketName) {
+    try {
+      Uri uri = Uri.parse(fullUrl);
+      // Contoh path URL: /storage/v1/object/public/Galeri/uploads/foto.jpg
+
+      // Kita ambil bagian path-nya saja dan pecah menjadi list
+      List<String> segments = uri.pathSegments;
+
+      // Cari posisi nama bucket ('Galeri') di dalam URL
+      int bucketIndex = segments.indexOf(bucketName);
+
+      // Jika nama bucket ketemu, ambil semua bagian SETELAH bucket
+      if (bucketIndex != -1 && bucketIndex + 1 < segments.length) {
+        // Menggabungkan kembali menjadi: "uploads/foto.jpg"
+        return segments.sublist(bucketIndex + 1).join('/');
+      }
+
+      return '';
+    } catch (e) {
+      return '';
     }
   }
 }

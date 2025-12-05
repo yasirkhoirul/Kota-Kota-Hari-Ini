@@ -42,23 +42,7 @@ class Approute {
             return MyDialog(kotaEntity: data);
           },
         ),
-        GoRoute(
-          path: '/editpage/:id',
-          parentNavigatorKey: _rootNavigatorKey,
-          pageBuilder: (context, state) {
-            final id = int.parse(state.pathParameters['id']!);
 
-            return CustomTransitionPage(
-              child: MyDialogUpPhoto(id: id),
-              transitionsBuilder: (context, animation, secondary, child) {
-                return FadeTransition(opacity: animation, child: child);
-              },
-              opaque: false, // Penting!! Background tetap terlihat
-              barrierColor: Colors.black54, // Backdrop transparan
-              barrierDismissible: false, // Klik di luar untuk tutup (opsional)
-            );
-          },
-        ),
         StatefulShellRoute(
           branches: [
             StatefulShellBranch(
@@ -74,19 +58,38 @@ class Approute {
                 GoRoute(
                   path: "/KotaAdmin",
                   builder: (context, state) => KotaAdminPage(),
-                ),
-              ],
-            ),
-            StatefulShellBranch(
-              routes: [
-                GoRoute(
-                  path: "/editpage",
-                  builder: (context, state) {
-                    final data = state.extra != null
-                        ? state.extra as KotaEntity
-                        : null;
-                    return EditPage(kotaEntity: data);
-                  },
+                  routes: [
+                    GoRoute(
+                      path: "Edit/:id",
+                      name: 'edit',
+                      builder: (context, state) {
+                        final datas = state.pathParameters['id'];
+                        return EditPage(id: datas ?? '');
+                      },
+                      routes: [
+                        GoRoute(
+                          path: 'editpage/:childId',
+                          name: 'editpage',
+                          parentNavigatorKey: _rootNavigatorKey,
+                          pageBuilder: (context, state) {
+                            final childId = state.pathParameters['childId']!;
+                            return CustomTransitionPage(
+                              child: MyDialogUpPhoto(id: int.parse(childId)),
+                              opaque: false,
+                              barrierColor: Colors.black54,
+                              barrierDismissible: false,
+                              transitionsBuilder:
+                                  (context, animation, secondary, child) =>
+                                      FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -159,7 +162,7 @@ class Approute {
         const List adminPath = [
           '/upload',
           '/KotaAdmin',
-          '/editpage',
+          '/Edit/:id',
           '/update',
           '/editpage/:id',
         ];

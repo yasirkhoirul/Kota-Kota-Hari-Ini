@@ -4,12 +4,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kota_kota_hari_ini/common/dialog.dart';
 import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
+import 'package:kota_kota_hari_ini/domain/usecase/update_kota.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/delete_image_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/detail_kota_dart_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/update_kota_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/upload_page_dart_cubit.dart';
+import 'package:logger/web.dart';
 
 class EditPage extends StatefulWidget {
-  final KotaEntity? kotaEntity;
-  const EditPage({super.key, required this.kotaEntity});
+  final String id;
+  const EditPage({super.key, required this.id});
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -19,19 +25,16 @@ class _EditPageState extends State<EditPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.kotaEntity!=null) {
-        context.read<DetailKotaDartCubit>().onGetKota(
-        widget.kotaEntity!.id.toString(),
-      );
+      if (widget.id.isNotEmpty) {
+        context.read<DetailKotaDartCubit>().onGetKota(widget.id);
       }
-      
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.kotaEntity != null
+    return widget.id.isNotEmpty
         ? BlocBuilder<DetailKotaDartCubit, DetailKotaDartState>(
             builder: (context, state) {
               if (state is DetailKotaDartLoading) {
@@ -44,7 +47,7 @@ class _EditPageState extends State<EditPage> {
                       ElevatedButton(
                         onPressed: () {
                           context.read<DetailKotaDartCubit>().onGetKota(
-                            widget.kotaEntity!.id.toString(),
+                            widget.id,
                           );
                         },
                         child: Text("Coba Lagi"),
@@ -220,59 +223,92 @@ class _EditContentTextState extends State<EditContentText> {
                   )
                 : Expanded(
                     flex: 10,
-                    child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: widget.jumlahcrossgrid,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10, // jumlah kolom
-                      ),
-                      itemCount: widget.kotaEntity.imagePath.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white,
-                          ),
-                          height: 50,
-                          width: 50,
+                    child: BlocConsumer<DeleteImageCubit, DeleteImageState>(
+                      listener: (context, state) {
+                        if (state is DeleteImageLoading) {
+                          Logger().d("dipanggildeletenya");
+                          DialogUtils.showLoading(context);
+                        } else if (state is DeleteImageError) {
+                          DialogUtils.hide(context);
+                          DialogUtils.showError(context, state.message);
+                        } else if (state is DeleteImageLoaded) {
+                          DialogUtils.hide(context);
+                          DialogUtils.showSuccess(
+                            context,
+                            message: state.message,
+                            onPressed: () {
+                              context.read<DetailKotaDartCubit>().onGetKota(
+                                widget.kotaEntity.id.toString(),
+                              );
+                            },
+                          );
+                        } else {}
+                      },
+                      builder: (context, state) {
+                        return GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: widget.jumlahcrossgrid,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10, // jumlah kolom
+                              ),
+                          itemCount: widget.kotaEntity.imagePath.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                              ),
+                              height: 50,
+                              width: 50,
 
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Positioned.fill(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    15,
-                                  ),
-                                  child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    imageUrl:
-                                        widget.kotaEntity.imagePath[index],
-                                    placeholder: (context, url) => Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Center(child: Icon(Icons.error)),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: -20,
-                                right: -20,
-                                child: IconButton(
-                                  onPressed: () {},
-                                  icon: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 15,
-                                    child: Icon(
-                                      Icons.close_rounded,
-                                      color: Colors.red,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Positioned.fill(
+                                    child: ClipRRect(
+                                      borderRadius:
+                                          BorderRadiusGeometry.circular(15),
+                                      child: CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        imageUrl:
+                                            widget.kotaEntity.imagePath[index],
+                                        placeholder: (context, url) => Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Center(child: Icon(Icons.error)),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  Positioned(
+                                    top: -20,
+                                    right: -20,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        context
+                                            .read<DeleteImageCubit>()
+                                            .ondelete(
+                                              widget.kotaEntity.id!,
+                                              widget
+                                                  .kotaEntity
+                                                  .imagePath[index],
+                                            );
+                                      },
+                                      icon: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        radius: 15,
+                                        child: Icon(
+                                          Icons.close_rounded,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            );
+                          },
                         );
                       },
                     ),
@@ -285,48 +321,73 @@ class _EditContentTextState extends State<EditContentText> {
                   child: Row(
                     spacing: 10,
                     children: [
-                      Expanded(
-                        child: !isgalerry
-                            ? OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  textStyle: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  context.push(
-                                    '/update',
-                                    extra: KotaEntity(
-                                      widget.kotaEntity.id,
-                                      namakota.text,
-                                      deskripsisingkat.text,
-                                      deskripsipanjang.text,
-                                      widget.kotaEntity.imagePath,
-                                      "",
-                                      lokasi.text,
+                      BlocConsumer<UpdateKotaCubit, UpdateKotaState>(
+                        listener: (context, state) {
+                          if (state is UpdateKotaLoading) {
+                            DialogUtils.showLoading(context);
+                          } else if (state is UpdateKotaLoaded) {
+                            DialogUtils.hide(context);
+                            DialogUtils.showSuccess(
+                              context,
+                              message: state.message,
+                              onPressed: () {
+                                context.read<DetailKotaDartCubit>().onGetKota(
+                                  widget.kotaEntity.id.toString(),
+                                );
+                              },
+                            );
+                          } else if (state is UpdateKotaError) {
+                            DialogUtils.hide(context);
+                            DialogUtils.showError(context, state.message);
+                          }
+                        },
+                        builder: (context, state) {
+                          return Expanded(
+                            child: !isgalerry
+                                ? OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      textStyle: TextStyle(color: Colors.white),
                                     ),
-                                  );
-                                  
-                                },
-                                child: Text(
-                                  "Ubah",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              )
-                            : OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  textStyle: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  context.push(
-                                    '/editpage/${widget.kotaEntity.id}',
-                                  );
-                                },
-                                child: Text(
-                                  "Upload Gambar",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
+                                    onPressed: () {
+                                      context.read<UpdateKotaCubit>().onUpdate(
+                                        KotaEntity(
+                                          widget.kotaEntity.id,
+                                          namakota.text,
+                                          deskripsisingkat.text,
+                                          deskripsipanjang.text,
+                                          widget.kotaEntity.imagePath,
+                                          "",
+                                          lokasi.text,
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      "Ubah",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                : OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      textStyle: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      final id = widget.kotaEntity.id;
+                                      context.goNamed(
+                                        'editpage',
+                                        pathParameters: {
+                                          'id':"$id",
+                                          'childId': '$id'},
+                                      );
+                                    },
+                                    child: Text(
+                                      "Upload Gambar",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                          );
+                        },
                       ),
                       Expanded(
                         child: !isgalerry

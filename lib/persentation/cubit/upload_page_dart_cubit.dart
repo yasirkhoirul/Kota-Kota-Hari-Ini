@@ -36,8 +36,6 @@ class UploadPageDartCubit extends Cubit<UploadPageDartState> {
   Future<void> uploadForm(String id) async{
     if (state is UploadPageDartLoaded) {
     final currentState = state as UploadPageDartLoaded; // gambar sudah ada disini
-    final uniquename = '${DateTime.now().millisecondsSinceEpoch}_${currentState.fileName}';
-    final path = 'uploads/$uniquename';
     try {
       if (currentState.imageBytes != null) {
         final data = await kota.execute(currentState.imageBytes!, id); // contoh upload ke usecase

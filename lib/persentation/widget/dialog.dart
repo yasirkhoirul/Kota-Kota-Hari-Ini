@@ -179,7 +179,12 @@ class MyDialogUpPhoto extends StatelessWidget {
                         OutlinedButton(
                           onPressed: () {
                             context.read<UploadPageDartCubit>().goinit();
-                            context.pop();
+                            context.replaceNamed(
+                              'edit',
+                              pathParameters: {
+                                'id':"$id"
+                              }
+                            );
                           },
                           child: Text("cancel"),
                         ),
@@ -187,19 +192,22 @@ class MyDialogUpPhoto extends StatelessWidget {
                     ),
                   );
                 } else if (state is UploadPageDartSuccess) {
-                  return Column(
-                      children: [
-                        const Text("upload sukses"),
-                        OutlinedButton(
-                          onPressed: () {
-                            context.read<DetailKotaDartCubit>().onGetKota(id.toString());
-                            context.read<UploadPageDartCubit>().goinit();
-                            context.pop();
-                          },
-                          child: Text("ok"),
-                        ),
-                      ],
-                    );
+                  return SizedBox(
+                    height: 300,
+                    child: Column(
+                        children: [
+                          const Text("upload sukses"),
+                          OutlinedButton(
+                            onPressed: () {
+                              context.read<DetailKotaDartCubit>().onGetKota(id.toString());
+                              context.read<UploadPageDartCubit>().goinit();
+                              context.pop();
+                            },
+                            child: Text("ok"),
+                          ),
+                        ],
+                      ),
+                  );
                 } else {
                   return Center(child: CircularProgressIndicator());
                 }

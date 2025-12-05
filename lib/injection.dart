@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kota_kota_hari_ini/data/data_remote_source.dart';
 import 'package:kota_kota_hari_ini/data/kota_repository_impl.dart';
 import 'package:kota_kota_hari_ini/domain/repository/kota_repository.dart';
+import 'package:kota_kota_hari_ini/domain/usecase/delete_image_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_all_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_one_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_search_kota.dart';
@@ -14,6 +15,7 @@ import 'package:kota_kota_hari_ini/domain/usecase/tambahkota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/update_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/uploadfotostorage.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/auth_user_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/delete_image_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/detail_kota_dart_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/loader_asset_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/search_kota_cubit.dart';
@@ -42,6 +44,7 @@ void init(){
   getIt.registerLazySingleton(() => Logout(getIt()),);
   getIt.registerLazySingleton(() => GetOneKota(getIt()),);
   getIt.registerLazySingleton(() => UpdateKota(getIt()),);
+  getIt.registerLazySingleton(() => DeleteImageKota(getIt()),);
 
   //dataremotsource
   getIt.registerLazySingleton<DataRemoteSource>(() => DataRemoteSourceImpl(),);
@@ -55,4 +58,5 @@ void init(){
   getIt.registerFactory(() => AuthUserCubit(getIt(), getStatusLogin: getIt(), logout: getIt()),);
   getIt.registerFactory(() => DetailKotaDartCubit(getIt()),);
   getIt.registerFactory(() => UpdateKotaCubit(getIt()),);
+  getIt.registerFactory(() => DeleteImageCubit(getIt()),);
 }

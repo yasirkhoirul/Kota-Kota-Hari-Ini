@@ -73,7 +73,7 @@ class DetailContent extends StatelessWidget {
             ),
             Center(
               child: FrostedGlassScreen(
-                width: islebar ? MediaQuery.of(context).size.width * 0.8 : 800,
+                width: islebar ? MediaQuery.of(context).size.width * 0.8 : MediaQuery.of(context).size.width * 0.9,
                 height: istinggi
                     ? MediaQuery.of(context).size.height * 0.8
                     : 1000,

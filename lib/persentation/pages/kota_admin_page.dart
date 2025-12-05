@@ -70,12 +70,17 @@ class _KotaAdminPageState extends State<KotaAdminPage> {
                                 leading: Container(
                                   height: 56,
                                   width: 56,
-                                  decoration: BoxDecoration(color: Colors.white),
-                              
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                  ),
+
                                   child: state.data[index].imagePath.isNotEmpty
                                       ? CachedNetworkImage(
-                                          placeholder: (context, url) => Center(child: CircularProgressIndicator(),),
-                                          errorWidget: (context, url, error) => Center(child: Icon(Icons.error),),
+                                          placeholder: (context, url) => Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Center(child: Icon(Icons.error)),
                                           imageUrl:
                                               state.data[index].imagePath.first,
                                         )
@@ -107,7 +112,12 @@ class _KotaAdminPageState extends State<KotaAdminPage> {
                                     children: [
                                       TextButton(
                                         onPressed: () {
-                                           context.push('/editpage',extra: state.data[index] );
+                                          context.goNamed(
+                                            'edit',
+                                            pathParameters: {
+                                              'id': "${state.data[index].id}",
+                                            },
+                                          );
                                         },
                                         child: Text(
                                           "Edit",

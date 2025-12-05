@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:gotrue/src/types/session.dart';
 import 'package:kota_kota_hari_ini/data/data_remote_source.dart';
@@ -123,6 +122,21 @@ class KotaRepositoryImpl implements KotaRepository {
       final readydata = Kotamodel.fromEntity(data);
       final response = await dataRemoteSource.updatedataKota(readydata);
       return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String> deletePhoto(int rowId, String urlToDelete) async {
+    try {
+      await dataRemoteSource.deleteImage(
+        rowId,
+        urlToDelete,
+      );
+      await dataRemoteSource
+          .deleteImagefromBucket(rowId, urlToDelete);
+      return "sukses";
     } catch (e) {
       rethrow;
     }

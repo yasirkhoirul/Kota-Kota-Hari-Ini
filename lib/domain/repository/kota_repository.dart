@@ -23,4 +23,8 @@ abstract class KotaRepository {
   Future<String> updateKota(
     KotaEntity data
   );
+
+  Future<String> deletePhoto(
+   int rowId, String urlToDelete
+  );
 }
