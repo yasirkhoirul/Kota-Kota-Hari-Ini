@@ -125,7 +125,7 @@ class _DetailContentState extends State<DetailContent> {
                           return InkWell(
                             onTap: () {
                               final id = widget.data.id;
-                              context.goNamed(
+                              context.pushNamed(
                                 'fullscreen',
                                 pathParameters: {
                                   'url': widget.data.imagePath[index],

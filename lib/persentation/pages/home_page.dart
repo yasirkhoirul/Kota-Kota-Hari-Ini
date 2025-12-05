@@ -383,7 +383,9 @@ intinya si webnya menjabarkan nilai historis dari kota kota di indonsia""",
               ),
               SizedBox(height: 20),
               OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.go('/kota');
+                },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   child: Row(
