@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/tambahkota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/uploadfotostorage.dart';
 import 'package:meta/meta.dart';
-
+import 'package:mime/mime.dart';
 part 'tambahkota_state.dart';
 
 class TambahkotaCubit extends Cubit<TambahkotaState> {
@@ -29,7 +29,9 @@ class TambahkotaCubit extends Cubit<TambahkotaState> {
 
       if (pickedFile != null) {
         final bytes = await pickedFile.readAsBytes();
-        emit(TambahKotaPickGambar(pickedFile.mimeType, bytes));
+
+        final mimeType = lookupMimeType(pickedFile.path) ?? "image/jpeg";
+        emit(TambahKotaPickGambar(mimeType, bytes));
       }
     } catch (e) {
       emit(TambahkotaError(message: "Gagal mengambil gambar: $e"));

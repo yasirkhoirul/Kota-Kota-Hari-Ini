@@ -137,9 +137,7 @@ class _TambahkotaPageState extends State<TambahkotaPage> {
                   if (state is TambahKotaPickGambar) {
                     return ElevatedButton(
                       onPressed: () {
-                        // 3. Cek Validasi di sini sebelum kirim data
                         if (_formKey.currentState!.validate()) {
-                          // Jika Valid, baru jalankan logic kirim
                           DateTime createdAt = DateTime.now();
 
                           context.read<TambahkotaCubit>().tambahkotaform(
