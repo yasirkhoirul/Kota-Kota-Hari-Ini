@@ -83,18 +83,12 @@ class _LoginPageState extends State<LoginPage>
             return Center(
               child: SingleChildScrollView(
                 child: SizedBox(
-                  height: needscrollview
-                      ? 700
-                      : MediaQuery.of(context).size.height,
+                  height: 800,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: FrostedGlassScreen(
-                      width: ismobile!
-                          ? MediaQuery.of(context).size.width * 0.8
-                          : 800,
-                      height: needscrollview
-                          ? 650
-                          : MediaQuery.of(context).size.height * 0.8,
+                      width: 800,
+                      height: 650,
                       child: Padding(
                         padding: const EdgeInsets.all(50),
                         child: BlocBuilder<AuthUserCubit, AuthUserState>(
