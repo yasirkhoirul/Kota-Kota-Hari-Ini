@@ -6,6 +6,7 @@ import 'package:kota_kota_hari_ini/persentation/notifier/listenauth.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/about_us_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/contact_us_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/detail_page.dart';
+import 'package:kota_kota_hari_ini/persentation/pages/detail_page_custom.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/edit_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/fullscreenpage.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/home_page.dart';
@@ -31,10 +32,7 @@ class Approute {
           name: 'detail',
           builder: (context, state) {
             final id = state.pathParameters['iddetail'];
-            return DetailPage(
-              data: state.extra != null ? state.extra as KotaEntity : null,
-              id: id!,
-            );
+            return DetailPageCustom(id: id??'');
           },
           routes: [
             GoRoute(
