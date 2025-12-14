@@ -78,7 +78,7 @@ class _AppbarsState extends State<Appbars> {
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.white,
                             ),
-                            child: const Text("About"),
+                            child: const Text("Contact Us"),
                           ),
                           spasi,
                           TextButton(
