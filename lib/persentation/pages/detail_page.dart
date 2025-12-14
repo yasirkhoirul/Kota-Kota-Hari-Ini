@@ -38,7 +38,7 @@ class _DetailPageState extends State<DetailPage> {
         } else {
           istinggi = false;
         }
-        if (constraints.maxWidth > 1400) {
+        if (constraints.maxWidth > 1200) {
           islebar = true;
         } else {
           islebar = false;
