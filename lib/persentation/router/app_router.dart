@@ -4,18 +4,21 @@ import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/auth_user_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/notifier/listenauth.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/about_us_page.dart';
+import 'package:kota_kota_hari_ini/persentation/pages/admin/input_detail_bangunan_page.dart';
+import 'package:kota_kota_hari_ini/persentation/pages/admin/inputbangunan_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/contact_us_page.dart';
+import 'package:kota_kota_hari_ini/persentation/pages/detail_bangunan.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/detail_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/detail_page_custom.dart';
-import 'package:kota_kota_hari_ini/persentation/pages/edit_page.dart';
+import 'package:kota_kota_hari_ini/persentation/pages/admin/edit_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/fullscreenpage.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/home_page.dart';
-import 'package:kota_kota_hari_ini/persentation/pages/kota_admin_page.dart';
+import 'package:kota_kota_hari_ini/persentation/pages/admin/kota_admin_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/kota_page.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/login_page.dart';
-import 'package:kota_kota_hari_ini/persentation/pages/main_scaffold_admin.dart';
+import 'package:kota_kota_hari_ini/persentation/pages/admin/main_scaffold_admin.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/main_scaffold_page.dart';
-import 'package:kota_kota_hari_ini/persentation/pages/tambahkota_page.dart';
+import 'package:kota_kota_hari_ini/persentation/pages/admin/tambahkota_page.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/dialog.dart';
 import 'package:logger/web.dart';
 
@@ -32,7 +35,7 @@ class Approute {
           name: 'detail',
           builder: (context, state) {
             final id = state.pathParameters['iddetail'];
-            return DetailPageCustom(id: id??'');
+            return DetailPageCustom(id: id ?? '');
           },
           routes: [
             GoRoute(
@@ -44,6 +47,22 @@ class Approute {
                 return FullscreenImagePage(
                   imageUrl: imageUrl ?? '',
                   tag: tag ?? '',
+                );
+              },
+            ),
+            GoRoute(
+              path: '/DetailBangunan/:idbangunan/:image',
+              name: 'detailbangunan',
+              builder: (context, state) {
+                final idbangunan = state.pathParameters['idbangunan'];
+                int idBangunanReady = 0;
+                if (idbangunan != null) {
+                  idBangunanReady = int.parse(idbangunan);
+                }
+                final image = state.pathParameters['image'];
+                return DetailBangunan(
+                  idBangunan: idBangunanReady,
+                  imageBangunan: image ?? '',
                 );
               },
             ),
@@ -74,6 +93,25 @@ class Approute {
                   path: "/KotaAdmin",
                   builder: (context, state) => KotaAdminPage(),
                   routes: [
+                    GoRoute(
+                      path: "Bangunan/:id",
+                      name: 'bangunan',
+                      builder: (context, state) {
+                        final data = state.pathParameters['id'];
+                        return BangunanKotaPage(idKota: data ?? '');
+                      },
+                      routes: [
+                        GoRoute(path: "detailbangunankota/:idbangunan",name: 'detailbangunankota',builder: (context, state) {
+                          final data = state.pathParameters['idbangunan'];
+                          int id = 0;
+                          if (data!=null) {
+                            id = int.parse(data);
+                          }
+                          return DetailBangunanPage(idBangunan: id,namaBangunan:  "detailbangunan");
+                        },)
+                        
+                      ]
+                    ),
                     GoRoute(
                       path: "Edit/:id",
                       name: 'edit',

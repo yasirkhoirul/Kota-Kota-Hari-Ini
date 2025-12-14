@@ -1,5 +1,9 @@
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:image_picker/image_picker.dart';
+import 'package:kota_kota_hari_ini/domain/entity/bangunan_entity.dart';
+import 'package:kota_kota_hari_ini/domain/entity/detail_bangunan_entity.dart';
 import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -24,4 +28,8 @@ abstract class KotaRepository {
 
   Future<String> deletePhoto(int rowId, String urlToDelete);
   Future<String> deleteKota(String id);
+  Future<List<BangunanEntity>> getBangunan(String idkota); 
+  Future<List<DetailBangunanEntity>> getBangunanDetail(int idbangunan);
+  Future<void> addBangunan(XFile image, int idKota, String deskripsi);
+  Future<void> addDetailBangunan(XFile image, int idBangunan, String deskripsi);
 }

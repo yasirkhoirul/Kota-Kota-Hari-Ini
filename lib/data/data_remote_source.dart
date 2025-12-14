@@ -1,6 +1,12 @@
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:image_picker/image_picker.dart';
+import 'package:kota_kota_hari_ini/data/model/bangunanmode.dart';
+import 'package:kota_kota_hari_ini/data/model/detailbangunanmodel.dart';
 import 'package:kota_kota_hari_ini/data/model/kotamodel.dart';
+import 'package:kota_kota_hari_ini/domain/entity/bangunan_entity.dart';
+import 'package:logger/web.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class DataRemoteSource {
@@ -25,6 +31,17 @@ abstract class DataRemoteSource {
   Future<void> deleteImagefromBucket(int rowId, String urlToDelete);
   String getPathFromUrl(String fullUrl, String bucketName);
   Future<String> deleteKota(String id);
+  Future<List<Bangunanmode>> getBangunanKota(String idKota);
+
+  Future<List<DetailBangunanModel>> getDetailBangunan(int idBangunan);
+  Future<String> uploadImage(XFile imageFile);
+  Future<void> insertBangunan({required int idKota, required String imageUrl, required String deskripsi});
+  Future<String> uploadDetailImage(XFile image); // Upload khusus detail
+  Future<void> insertDetailBangunan({
+    required int idBangunan, 
+    required String imagePath, 
+    required String deskripsi
+  });
 }
 
 class DataRemoteSourceImpl implements DataRemoteSource {
@@ -301,6 +318,126 @@ class DataRemoteSourceImpl implements DataRemoteSource {
       }
     } catch (e) {
       throw Exception(e.toString());
+    }
+  }
+  
+  @override
+  Future<List<Bangunanmode>> getBangunanKota(String idKota) async{
+    final supabase = Supabase.instance.client;
+    Logger().d("Id kota $idKota");
+    try {
+      final response = await supabase
+          .from('BangunanaKota')
+          .select()
+          .eq('id_kota', idKota);
+
+      final data = response as List<dynamic>;
+      Logger().d("Data yang ada $response");
+      return data.map((item) => Bangunanmode.fromJson(item)).toList();
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<List<DetailBangunanModel>> getDetailBangunan(int idBangunan) async {
+    final supabase = Supabase.instance.client;
+    
+    try {
+      final response = await supabase
+          .from('DetailBangunan') // Sesuaikan huruf besar/kecil nama tabel
+          .select()
+          .eq('id_bangunan', idBangunan); // PENTING: Ganti 'id_bangunan' dengan nama kolom FK di tabel DetailBangunan anda
+
+      // Cek jika kosong (opsional, untuk debugging)
+      if (response.isEmpty) {
+        Logger().w("Detail bangunan kosong untuk ID: $idBangunan");
+        return [];
+      }
+
+      final data = response as List<dynamic>;
+      return data.map((item) => DetailBangunanModel.fromJson(item)).toList();
+      
+    } catch (e) {
+      Logger().e("Error getDetailBangunan: $e");
+      throw Exception("Gagal mengambil detail: $e");
+    }
+  }
+  
+  @override
+  Future<void> insertBangunan({required int idKota, required String imageUrl, required String deskripsi}) async{
+    final supabase = Supabase.instance.client;
+    try {
+      // Sesuai screenshot tabel: 'BangunanaKota'
+      await supabase.from('BangunanaKota').insert({
+        'id_kota': idKota,
+        'image_path': imageUrl,
+        'deskipsi': deskripsi, // Sesuai typo di DB
+      });
+    } catch (e) {
+      throw Exception("Gagal Insert Database: $e");
+    }
+  }
+  
+  @override
+  Future<String> uploadImage(XFile imageFile) async{
+    final supabase = Supabase.instance.client;
+    try {
+      final bytes = await imageFile.readAsBytes();
+      final fileExt = imageFile.path.split('.').last;
+      final fileName = 'bangunan_${DateTime.now().millisecondsSinceEpoch}.$fileExt';
+      // Sesuai screenshot bucket anda: 'Galeri', folder: 'bangunan'
+      final path = 'bangunan/$fileName';
+
+      await supabase.storage.from('Galeri').updateBinary(
+            path,
+            bytes,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+          );
+
+      // Ambil Public URL
+      final String publicUrl = supabase.storage.from('Galeri').getPublicUrl(path);
+      return publicUrl;
+    } catch (e) {
+      throw Exception("Gagal Upload Gambar: $e");
+    }
+  }
+  
+  @override
+  Future<void> insertDetailBangunan({required int idBangunan, required String imagePath, required String deskripsi}) async{
+    final supabase = Supabase.instance.client;
+    try {
+      await supabase.from('DetailBangunan').insert({
+        'id_bangunan': idBangunan, // Foreign Key
+        'images_path': imagePath,  // Sesuai nama kolom di DB
+        'deskripsi': deskripsi,
+      });
+    } catch (e) {
+      throw Exception("Gagal Insert Detail: $e");
+    }
+  }
+  
+  @override
+  Future<String> uploadDetailImage(XFile image) async{
+   final supabase = Supabase.instance.client;
+   try {
+      final bytes = await image.readAsBytes();
+      final fileExt = image.name.split('.').last;
+      final fileName = 'detail_${DateTime.now().millisecondsSinceEpoch}.$fileExt';
+      
+      // PENTING: Arahkan ke folder 'detailBangunan' sesuai screenshot
+      final path = 'detailBangunan/$fileName'; 
+
+      await supabase.storage.from('Galeri').uploadBinary(
+            path,
+            bytes,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+          );
+
+      // Ambil Public URL
+      return supabase.storage.from('Galeri').getPublicUrl(path);
+    } catch (e) {
+      throw Exception("Gagal Upload Detail: $e");
     }
   }
 }

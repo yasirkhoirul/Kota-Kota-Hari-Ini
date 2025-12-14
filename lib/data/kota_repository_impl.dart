@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:gotrue/src/types/session.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kota_kota_hari_ini/data/data_remote_source.dart';
 import 'package:kota_kota_hari_ini/data/model/kotamodel.dart';
+import 'package:kota_kota_hari_ini/domain/entity/bangunan_entity.dart';
+import 'package:kota_kota_hari_ini/domain/entity/detail_bangunan_entity.dart';
 import 'package:kota_kota_hari_ini/domain/entity/kota_entity.dart';
 import 'package:kota_kota_hari_ini/domain/repository/kota_repository.dart';
 
@@ -146,5 +150,52 @@ class KotaRepositoryImpl implements KotaRepository {
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<List<BangunanEntity>> getBangunan(String idkota) async{
+    try {
+      final data = await dataRemoteSource.getBangunanKota(idkota);
+      return data.map((e) => e.toEntity(e),).toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+  @override
+  Future<List<DetailBangunanEntity>> getBangunanDetail(int idkota) async{
+    try {
+      final data = await dataRemoteSource.getDetailBangunan(idkota);
+      return data.map((e) => e.toEntity(),).toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> addBangunan(XFile image, int idKota, String deskripsi) async{
+    try {
+      // 1. Jalankan Upload Image
+      final String imageUrl = await dataRemoteSource.uploadImage(image);
+
+      // 2. Gunakan URL hasil upload untuk Insert ke DB
+      await dataRemoteSource.insertBangunan(
+        idKota: idKota,
+        imageUrl: imageUrl,
+        deskripsi: deskripsi,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+  
+  @override
+  Future<void> addDetailBangunan(XFile image, int idBangunan, String deskripsi) async{
+    final url = await dataRemoteSource.uploadDetailImage(image);
+    // 2. Simpan data
+    await dataRemoteSource.insertDetailBangunan(
+      idBangunan: idBangunan,
+      imagePath: url,
+      deskripsi: deskripsi,
+    );
   }
 }

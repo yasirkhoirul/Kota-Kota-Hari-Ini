@@ -137,7 +137,7 @@ class _KotaAdminPageState extends State<KotaAdminPage> {
                                       ),
                                     ),
                                     trailing: SizedBox(
-                                      width: 130,
+                                      width: 177,
                                       child: Row(
                                         children: [
                                           TextButton(
@@ -156,6 +156,18 @@ class _KotaAdminPageState extends State<KotaAdminPage> {
                                                 color: Colors.white,
                                               ),
                                             ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              context.goNamed(
+                                                'bangunan',
+                                                pathParameters: {
+                                                  'id':
+                                                      "${state.data[index].id}",
+                                                },
+                                              );
+                                            },
+                                            icon: Icon(Icons.location_city,color: Colors.white,)
                                           ),
                                           TextButton(
                                             onPressed: () {

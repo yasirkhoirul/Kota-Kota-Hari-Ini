@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kota_kota_hari_ini/data/database/supabase.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/add_bangunan_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/add_detail_bangunan_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/auth_user_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/bangunan_kota_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/delete_image_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/delete_kota_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/detail_bangunan_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/detail_kota_dart_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/loader_asset_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/search_kota_cubit.dart';
@@ -39,6 +43,10 @@ void main() async {
         BlocProvider(create: (context) => getisinstance<UpdateKotaCubit>()),
         BlocProvider(create: (context) => getisinstance<DeleteImageCubit>()),
         BlocProvider(create: (context) => getisinstance<DeleteKotaCubit>()),
+        BlocProvider(create: (context) => getisinstance<BangunanKotaCubit>()),
+        BlocProvider(create: (context) => getisinstance<DetailBangunanCubit>()),
+        BlocProvider(create: (context) => getisinstance<AddBangunanCubit>()),
+        BlocProvider(create: (context) => getisinstance<AddDetailBangunanCubit>()),
         BlocProvider(
           create: (context) => getisinstance<AuthUserCubit>()..getstatuslogin(),
         ),

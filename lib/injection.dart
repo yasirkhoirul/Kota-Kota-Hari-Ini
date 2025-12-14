@@ -6,18 +6,26 @@ import 'package:kota_kota_hari_ini/domain/repository/kota_repository.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/delete_image_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/delete_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_all_kota.dart';
+import 'package:kota_kota_hari_ini/domain/usecase/get_bangunan_kota.dart';
+import 'package:kota_kota_hari_ini/domain/usecase/get_detail_bangunan.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_one_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_search_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_status_login.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/login.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/logout.dart';
+import 'package:kota_kota_hari_ini/domain/usecase/post_bangunan.dart';
+import 'package:kota_kota_hari_ini/domain/usecase/post_detail_bangunan.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/post_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/tambahkota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/update_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/uploadfotostorage.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/add_bangunan_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/add_detail_bangunan_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/auth_user_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/bangunan_kota_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/delete_image_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/delete_kota_cubit.dart';
+import 'package:kota_kota_hari_ini/persentation/cubit/detail_bangunan_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/detail_kota_dart_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/loader_asset_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/search_kota_cubit.dart';
@@ -50,6 +58,10 @@ void init() {
   getIt.registerLazySingleton(() => UpdateKota(getIt()));
   getIt.registerLazySingleton(() => DeleteImageKota(getIt()));
   getIt.registerLazySingleton(() => DeleteKota(getIt()));
+  getIt.registerLazySingleton(() => GetBangunanKota(getIt()));
+  getIt.registerLazySingleton(() => GetDetailBangunan(getIt()));
+  getIt.registerLazySingleton(() => AddBangunanUseCase(getIt()));
+  getIt.registerLazySingleton(() => AddDetailUseCase(getIt()));
 
   //dataremotsource
   getIt.registerLazySingleton<DataRemoteSource>(() => DataRemoteSourceImpl());
@@ -69,4 +81,8 @@ void init() {
   getIt.registerFactory(() => UpdateKotaCubit(getIt()));
   getIt.registerFactory(() => DeleteImageCubit(getIt()));
   getIt.registerFactory(() => DeleteKotaCubit(getIt()));
+  getIt.registerFactory(() => BangunanKotaCubit(getIt()));
+  getIt.registerFactory(() => DetailBangunanCubit(getIt()));
+  getIt.registerFactory(() => AddBangunanCubit(getIt()));
+  getIt.registerFactory(() => AddDetailBangunanCubit(getIt()));
 }
