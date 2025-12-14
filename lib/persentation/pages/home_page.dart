@@ -373,9 +373,7 @@ class ContentLeft extends StatelessWidget {
               ),
               SizedBox(height: 5),
               Text(
-                """Kota-Kota Hari Ini bercerita tentang bangunan tua yang hidup kembali sebagai panggung, restoran, dan ruang publik. 
-                Dengan pendekatan Historic Urban Landscape (HUL), 
-                sejarah tetap hadir di tengah ritme kota hari ini.""",
+                """Kota-Kota Hari Ini bercerita tentang bangunan tua yang hidup kembali sebagai panggung, restoran, dan ruang publik. Dengan pendekatan Historic Urban Landscape (HUL), sejarah tetap hadir di tengah ritme kota hari ini.""",
                 style: GoogleFonts.robotoFlex(
                   color: Colors.white,
                   fontSize: 16,
