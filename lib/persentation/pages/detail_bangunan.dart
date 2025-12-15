@@ -135,9 +135,14 @@ class ItemRow extends StatelessWidget {
     return FrosGlassWrap(
       
       // Kita kirim context ke helper method
-      child: isDesktop 
-          ? _buildDesktopLayout(context) 
-          : _buildMobileLayout(context),
+      child: SizedBox(
+        height: isDesktop? 200:600,
+        child: SingleChildScrollView(
+          child: isDesktop 
+              ? _buildDesktopLayout(context) 
+              : _buildMobileLayout(context),
+        ),
+      ),
     );
   }
 
@@ -159,7 +164,7 @@ class ItemRow extends StatelessWidget {
   // === TAMPILAN DESKTOP (>= 800) ===
   Widget _buildDesktopLayout(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ClipRRect(
           borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
