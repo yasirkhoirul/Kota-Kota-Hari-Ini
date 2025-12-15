@@ -65,10 +65,26 @@ class _KotaPageState extends State<KotaPage> {
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     children: [
+                      Positioned.fill(child: Container(
+                        color: Color.fromARGB(255, 231, 227, 227),
+                      )),
                       Positioned.fill(
                         child: Image.asset(
-                          Images.kotaappbar,
-                          fit: BoxFit.cover,
+                          Images.siluetbackground,
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black.withAlpha(250),
+                              Colors.black.withAlpha(40),
+                              Colors.black.withAlpha(0),
+                            ],
+                            begin: AlignmentGeometry.bottomCenter,
+                            end: AlignmentGeometry.topCenter,
+                          ),
                         ),
                       ),
                       tinggi
@@ -360,7 +376,7 @@ class _SearchContentState extends State<SearchContent> {
                   style: GoogleFonts.robotoFlex(
                     fontSize: widget.ismobile ? 32 : 64,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
               ),
@@ -407,7 +423,7 @@ class TextContent extends StatelessWidget {
               style: GoogleFonts.robotoFlex(
                 fontSize: ismobile ? 45 : 96,
                 fontWeight: FontWeight.normal,
-                color: Colors.white,
+                color: Colors.black,
                 height: 0,
                 letterSpacing: -5,
               ),
@@ -443,7 +459,7 @@ class TextContent extends StatelessWidget {
             child: Text(
               "pada halamans ini anda akan dibawa ke berbagai macam macam kota \nmulai dari sabang sampai merauke",
               style: GoogleFonts.robotoFlex(
-                color: Colors.white,
+                color: Color.fromARGB(255, 255, 255, 255),
                 fontSize: ismobile ? 11 : 16,
                 fontWeight: FontWeight.w100,
               ),

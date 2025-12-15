@@ -316,7 +316,7 @@ class ItemRow extends StatelessWidget {
             data.deskripsi,
             style: const TextStyle(
               fontSize: 16,
-              color: Color(0xFF4A4A4A),
+              color: Color.fromARGB(255, 255, 255, 255),
               height: 1.6,
             ),
             textAlign: TextAlign.justify,
