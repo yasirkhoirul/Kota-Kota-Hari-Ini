@@ -132,15 +132,16 @@ class ItemRow extends StatelessWidget {
     // 1. Cek Lebar Layar
     final isDesktop = MediaQuery.of(context).size.width >= 800;
 
-    return FrosGlassWrap(
-      
-      // Kita kirim context ke helper method
-      child: SizedBox(
-        height: isDesktop? 200:600,
-        child: SingleChildScrollView(
-          child: isDesktop 
-              ? _buildDesktopLayout(context) 
-              : _buildMobileLayout(context),
+    return InkWell(
+      onTap: () => _showFullscreenDialog(context),
+      child: FrosGlassWrap(
+        // Kita kirim context ke helper method
+        child: SizedBox(
+          child: SingleChildScrollView(
+            child: isDesktop 
+                ? _buildDesktopLayout(context) 
+                : _buildMobileLayout(context),
+          ),
         ),
       ),
     );
@@ -163,24 +164,22 @@ class ItemRow extends StatelessWidget {
 
   // === TAMPILAN DESKTOP (>= 800) ===
   Widget _buildDesktopLayout(BuildContext context) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ClipRRect(
-          borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
           child: SizedBox(
-            width: 300,
+            width: 500,
             // Kirim Context ke sini
             child: _buildImage(
               context,
-              height: 200, // Fixed height agar stabil
-              width: 300
+              height: 500, // Fixed height agar stabil
+              width: 500
             ),
           ),
         ),
-        Expanded(
-          child: _buildDescriptionPadding(),
-        ),
+        _buildDescriptionPadding(),
       ],
     );
   }
@@ -190,27 +189,24 @@ class ItemRow extends StatelessWidget {
     // Bungkus dengan Material & InkWell agar bisa diklik dan ada efek ripple
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        onTap: () => _showFullscreenDialog(context), // Panggil fungsi dialog
-        child: Hero(
-          tag: data.imagePath, // Tag Hero untuk animasi terbang
-          child: CachedNetworkImage(
-            imageUrl: data.imagePath,
-            fit: BoxFit.cover, 
+      child: Hero(
+        tag: data.imagePath, // Tag Hero untuk animasi terbang
+        child: CachedNetworkImage(
+          imageUrl: data.imagePath,
+          fit: BoxFit.cover, 
+          height: height,
+          width: width,
+          errorWidget: (context, url, error) => Container(
             height: height,
             width: width,
-            errorWidget: (context, url, error) => Container(
-              height: height,
-              width: width,
-              color: Colors.grey[200],
-              child: const Icon(Icons.broken_image, color: Colors.grey),
-            ),
-            placeholder: (context, url) => Container(
-              height: height,
-              width: width,
-              color: Colors.grey[200],
-              child: const Center(child: CircularProgressIndicator()),
-            ),
+            color: Colors.grey[200],
+            child: const Icon(Icons.broken_image, color: Colors.grey),
+          ),
+          placeholder: (context, url) => Container(
+            height: height,
+            width: width,
+            color: Colors.grey[200],
+            child: const Center(child: CircularProgressIndicator()),
           ),
         ),
       ),

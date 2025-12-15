@@ -121,7 +121,7 @@ class _FrosGlassWrapState extends State<FrosGlassWrap>
 
     _blurAnimation = Tween<double>(
       begin: 0,
-      end: 15,
+      end: 25,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
