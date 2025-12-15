@@ -5,6 +5,7 @@ import 'package:kota_kota_hari_ini/common/constant.dart';
 import 'package:kota_kota_hari_ini/domain/entity/detail_bangunan_entity.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/detail_bangunan_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/pages/fullscreenpage.dart';
+import 'package:kota_kota_hari_ini/persentation/widget/frostglass.dart';
 
 class DetailBangunan extends StatefulWidget {
   final int idBangunan;
@@ -42,21 +43,16 @@ class _DetailBangunanState extends State<DetailBangunan> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.black.withAlpha(250),
-                  Colors.black.withAlpha(40),
-                  Colors.black.withAlpha(0),
+                  const Color.fromARGB(255, 104, 102, 102).withAlpha(250),
+                  const Color.fromARGB(255, 131, 130, 130).withAlpha(40),
+                  const Color.fromARGB(255, 136, 136, 136).withAlpha(50),
                 ],
                 begin: AlignmentGeometry.bottomCenter,
                 end: AlignmentGeometry.topCenter,
               ),
             ),
           ),
-          Positioned(
-            right: 0,
-            left: 0,
-            bottom: -2,
-            child: Image.asset(Images.siluetbackground, fit: BoxFit.fitWidth),
-          ),
+         
           CustomScrollView(
             physics: const BouncingScrollPhysics(), // Efek scroll iOS yang halus
             slivers: [
@@ -190,19 +186,8 @@ class ItemRow extends StatelessWidget {
     // 1. Cek Lebar Layar
     final isDesktop = MediaQuery.of(context).size.width >= 800;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return FrosGlassWrap(
+      
       // Kita kirim context ke helper method
       child: isDesktop 
           ? _buildDesktopLayout(context) 
