@@ -26,6 +26,7 @@ dependencies:
   flutter_staggered_animations: ^1.0.0
   image_picker: ^1.2.1
   mime: ^1.0.4
+  url_launcher: ^6.3.2
   logger: ^2.6.2
 
 dev_dependencies:

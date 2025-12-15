@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kota_kota_hari_ini/persentation/widget/slideintext.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsPage extends StatelessWidget {
   const ContactUsPage({super.key});
@@ -120,12 +122,40 @@ class ContentContactUs extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      // 1. Ubah 0815... jadi 62815...
+                      const phoneNumber = '6281585431568';
+                      // 2. Buat URL WhatsApp API
+                      final url = Uri.parse('https://wa.me/$phoneNumber');
+
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      } else {
+                        debugPrint("Tidak bisa membuka WhatsApp");
+                      }
+                    },
                     icon: Icon(FontAwesomeIcons.whatsapp, color: Colors.white),
                     iconSize: 50,
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      // 1. Buat URI mailto
+                      final Uri emailLaunchUri = Uri(
+                        scheme: 'mailto',
+                        path: 'bambang.rakhmanto@mail.unnes.ac.id',
+                        query:
+                            'subject=Tanya%20Seputar%20Kost&body=Halo%20Pak%20Bambang,', // Optional: Isi subject/body default
+                      );
+
+                      if (await canLaunchUrl(emailLaunchUri)) {
+                        await launchUrl(emailLaunchUri);
+                      } else {
+                        debugPrint("Tidak bisa membuka Email Client");
+                      }
+                    },
                     icon: Icon(FontAwesomeIcons.google, color: Colors.white),
                     iconSize: 45,
                   ),
