@@ -198,4 +198,32 @@ class KotaRepositoryImpl implements KotaRepository {
       deskripsi: deskripsi,
     );
   }
+  
+  @override
+  Future<String> deleteDetailBangunan(int idDetailBangunan, String imageUrl) async{
+    try {
+      final response = await dataRemoteSource.deleteDetailBangunan(idDetailBangunan, imageUrl);
+      if (response) {
+        return 'sukses';
+      }else{
+        throw "terjadi kesalhan";
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+  
+  @override
+  Future<String> deleteBangunan(int idBangunan, String imageUrl) async{
+     try {
+      final response = await dataRemoteSource.deleteBangunan(idBangunan, imageUrl);
+      if (response) {
+        return 'sukses';
+      }else{
+        throw "terjadi kesalhan";
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

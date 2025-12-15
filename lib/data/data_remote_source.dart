@@ -42,6 +42,8 @@ abstract class DataRemoteSource {
     required String imagePath, 
     required String deskripsi
   });
+  Future<bool> deleteDetailBangunan(int id, String imageUrl);
+  Future<bool> deleteBangunan(int id, String imageUrl);
 }
 
 class DataRemoteSourceImpl implements DataRemoteSource {
@@ -439,5 +441,61 @@ class DataRemoteSourceImpl implements DataRemoteSource {
     } catch (e) {
       throw Exception("Gagal Upload Detail: $e");
     }
+  }
+  
+  @override
+  Future<bool> deleteDetailBangunan(int id, String imageUrl) async{
+    final supabase = Supabase.instance.client;
+   try {
+    
+    // 1. Tentukan Nama Bucket sesuai gambar kamu
+    const String bucketName = 'Galeri';
+
+    // 2. Ambil "Path File" dari URL
+    // URL Asli: https://xyz.supabase.co/.../public/Galeri/detailBangunan/foto.jpg
+    // Kita butuh string setelah 'Galeri/' -> yaitu "detailBangunan/foto.jpg"
+    
+    // Logic: Split URL berdasarkan nama bucket
+    final String path = imageUrl.split('/$bucketName/').last; 
+
+    // 3. Hapus File dari Bucket 'Galeri'
+    // .remove() meminta list path file (contoh: ['detailBangunan/foto.jpg'])
+    await supabase.storage.from(bucketName).remove([path]);
+
+    // 4. Hapus Data Row di Database (Tabel 'detail_bangunan')
+    await supabase.from('DetailBangunan').delete().eq('id', id);
+    return  true;
+  } catch (e) {
+    Logger().e(e.toString());
+    return false;
+  }
+  }
+  
+  @override
+  Future<bool> deleteBangunan(int id, String imageUrl)async{
+    final supabase = Supabase.instance.client;
+   try {
+    
+    // 1. Tentukan Nama Bucket sesuai gambar kamu
+    const String bucketName = 'Galeri';
+
+    // 2. Ambil "Path File" dari URL
+    // URL Asli: https://xyz.supabase.co/.../public/Galeri/detailBangunan/foto.jpg
+    // Kita butuh string setelah 'Galeri/' -> yaitu "detailBangunan/foto.jpg"
+    
+    // Logic: Split URL berdasarkan nama bucket
+    final String path = imageUrl.split('/$bucketName/').last; 
+
+    // 3. Hapus File dari Bucket 'Galeri'
+    // .remove() meminta list path file (contoh: ['detailBangunan/foto.jpg'])
+    await supabase.storage.from(bucketName).remove([path]);
+
+    // 4. Hapus Data Row di Database (Tabel 'detail_bangunan')
+    await supabase.from('BangunanaKota').delete().eq('id', id);
+    return  true;
+  } catch (e) {
+    Logger().e(e.toString());
+    return false;
+  }
   }
 }

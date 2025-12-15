@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart'; // Untuk kIsWeb
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kota_kota_hari_ini/persentation/cubit/add_detail_bangunan_cubit.dart'; 
+import 'package:kota_kota_hari_ini/persentation/cubit/add_detail_bangunan_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/detail_bangunan_cubit.dart'; // Cubit Fetch Data
 // Import Dialog yang tadi dibuat// Sesuaikan path-nya
@@ -24,26 +24,20 @@ class DetailBangunanPage extends StatefulWidget {
 }
 
 class _DetailBangunanPageState extends State<DetailBangunanPage> {
-  
   @override
   void initState() {
     super.initState();
-    // 1. Fetch data detail saat halaman dibuka
     _fetchData();
   }
 
   void _fetchData() {
-    // Panggil function di Cubit untuk ambil list detail
-    // Pastikan nama functionnya sesuai di DetailBangunanCubit kamu (misal: getDetail atau getDetailBangunan)
     context.read<DetailBangunanCubit>().getBangunan(widget.idBangunan);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.namaBangunan),
-      ),
+      appBar: AppBar(title: Text(widget.namaBangunan)),
       // 2. Tombol Tambah (FAB)
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -68,13 +62,9 @@ class _DetailBangunanPageState extends State<DetailBangunanPage> {
         builder: (context, state) {
           if (state is DetailBangunanLoading) {
             return const Center(child: CircularProgressIndicator());
-          } 
-          
-          else if (state is DetailBangunanError) {
+          } else if (state is DetailBangunanError) {
             return Center(child: Text(state.message));
-          } 
-          
-          else if (state is DetailBangunanLoaded) {
+          } else if (state is DetailBangunanLoaded) {
             // Cek jika data kosong
             if (state.data.isEmpty) {
               return const Center(child: Text("Belum ada detail ruangan."));
@@ -86,56 +76,96 @@ class _DetailBangunanPageState extends State<DetailBangunanPage> {
               itemCount: state.data.length,
               itemBuilder: (context, index) {
                 final detail = state.data[index];
-                
+
                 // Card untuk setiap item detail
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16),
                   elevation: 4,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
                     children: [
-                      // A. Gambar
-                      ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                        child: Image.network(
-                          detail.imagePath, // Sesuaikan field url gambar di entity kamu
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => 
-                            Container(
-                              height: 200, 
-                              color: Colors.grey[300], 
-                              child: const Icon(Icons.broken_image)
-                            ),
-                          loadingBuilder: (context, child, loadingProgress) {
-                             if (loadingProgress == null) return child;
-                             return Container(
-                               height: 200,
-                               color: Colors.grey[200],
-                               child: const Center(child: CircularProgressIndicator()),
-                             );
-                          },
-                        ),
-                      ),
-                      
-                      // B. Deskripsi
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              detail.deskripsi, // Sesuaikan field deskripsi di entity kamu
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                            // A. Gambar
+                            ClipRRect(
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(12),
+                              ),
+                              child: Image.network(
+                                detail
+                                    .imagePath, // Sesuaikan field url gambar di entity kamu
+                                height: 200,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                      height: 200,
+                                      color: Colors.grey[300],
+                                      child: const Icon(Icons.broken_image),
+                                    ),
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Container(
+                                        height: 200,
+                                        color: Colors.grey[200],
+                                        child: const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      );
+                                    },
                               ),
                             ),
-                            // Tambahan info lain jika ada (misal tanggal upload)
+
+                            // B. Deskripsi
+                            BlocConsumer<AddDetailBangunanCubit, AddDetailBangunanState>(
+                              listener: (context, state) {
+                                if (state is AddDeleteSuccess) {
+                                  context.read<DetailBangunanCubit>().getBangunan(widget.idBangunan);
+                                }
+                                if (state is AddDetailError) {
+                                  showDialog(context: context, builder: (context) => AlertDialog(
+                                    title: Icon(Icons.error,color: Colors.redAccent,),
+                                    content: Text(state.message),
+                                  ),);
+                                }
+                              },
+                              builder: (context, state) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        detail
+                                            .deskripsi, // Sesuaikan field deskripsi di entity kamu
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      // Tambahan info lain jika ada (misal tanggal upload)
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          context.read<AddDetailBangunanCubit>().deleteDetail(
+                            detail.id,
+                            detail.imagePath,
+                          );
+                        },
+                        icon: Icon(Icons.cancel, color: Colors.redAccent),
                       ),
                     ],
                   ),
@@ -150,10 +180,6 @@ class _DetailBangunanPageState extends State<DetailBangunanPage> {
     );
   }
 }
-
-
-
-
 
 class AddDetailDialog extends StatefulWidget {
   final int idBangunan;
@@ -183,7 +209,7 @@ class _AddDetailDialogState extends State<AddDetailDialog> {
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    
+
     if (image != null) {
       setState(() {
         _selectedImage = image;
@@ -198,9 +224,12 @@ class _AddDetailDialogState extends State<AddDetailDialog> {
       listener: (context, state) {
         if (state is AddDetailSuccess) {
           Navigator.pop(context); // Tutup dialog
-          widget.onSuccess();     // Refresh list di halaman belakang
+          widget.onSuccess(); // Refresh list di halaman belakang
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Berhasil menambah detail!"), backgroundColor: Colors.green),
+            const SnackBar(
+              content: Text("Berhasil menambah detail!"),
+              backgroundColor: Colors.green,
+            ),
           );
         } else if (state is AddDetailError) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -230,16 +259,29 @@ class _AddDetailDialogState extends State<AddDetailDialog> {
                     child: _selectedImage != null
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: kIsWeb 
-                                ? Image.network(_selectedImage!.path, fit: BoxFit.cover) 
-                                : Image.file(File(_selectedImage!.path), fit: BoxFit.cover),
+                            child: kIsWeb
+                                ? Image.network(
+                                    _selectedImage!.path,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.file(
+                                    File(_selectedImage!.path),
+                                    fit: BoxFit.cover,
+                                  ),
                           )
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.add_a_photo, size: 40, color: Colors.grey[600]),
+                              Icon(
+                                Icons.add_a_photo,
+                                size: 40,
+                                color: Colors.grey[600],
+                              ),
                               const SizedBox(height: 8),
-                              Text("Ketuk untuk pilih foto", style: TextStyle(color: Colors.grey[600])),
+                              Text(
+                                "Ketuk untuk pilih foto",
+                                style: TextStyle(color: Colors.grey[600]),
+                              ),
                             ],
                           ),
                   ),
@@ -248,12 +290,13 @@ class _AddDetailDialogState extends State<AddDetailDialog> {
 
                 // --- DESKRIPSI ---
                 TextFormField(
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
                   controller: _deskripsiController,
                   decoration: const InputDecoration(
                     labelText: "Deskripsi (misal: Kamar Tidur)",
                     border: OutlineInputBorder(),
                   ),
-                  maxLines: 2,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Deskripsi wajib diisi";
@@ -270,7 +313,7 @@ class _AddDetailDialogState extends State<AddDetailDialog> {
             onPressed: () => Navigator.pop(context),
             child: const Text("Batal", style: TextStyle(color: Colors.grey)),
           ),
-          
+
           // BlocBuilder mendengarkan state dari Cubit global
           BlocBuilder<AddDetailBangunanCubit, AddDetailBangunanState>(
             builder: (context, state) {
@@ -278,19 +321,21 @@ class _AddDetailDialogState extends State<AddDetailDialog> {
                 return const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   child: SizedBox(
-                    width: 20, 
-                    height: 20, 
+                    width: 20,
+                    height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 );
               }
-              
+
               return ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     if (_selectedImage == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Harap pilih gambar dulu!")),
+                        const SnackBar(
+                          content: Text("Harap pilih gambar dulu!"),
+                        ),
                       );
                       return;
                     }

@@ -3,6 +3,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kota_kota_hari_ini/data/data_remote_source.dart';
 import 'package:kota_kota_hari_ini/data/kota_repository_impl.dart';
 import 'package:kota_kota_hari_ini/domain/repository/kota_repository.dart';
+import 'package:kota_kota_hari_ini/domain/usecase/delete_bangunan.dart';
+import 'package:kota_kota_hari_ini/domain/usecase/delete_detal_bangunan.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/delete_image_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/delete_kota.dart';
 import 'package:kota_kota_hari_ini/domain/usecase/get_all_kota.dart';
@@ -62,6 +64,8 @@ void init() {
   getIt.registerLazySingleton(() => GetDetailBangunan(getIt()));
   getIt.registerLazySingleton(() => AddBangunanUseCase(getIt()));
   getIt.registerLazySingleton(() => AddDetailUseCase(getIt()));
+  getIt.registerLazySingleton(() => DeleteDetalBangunan(getIt()));
+  getIt.registerLazySingleton(() => DeleteBangunan(getIt()));
 
   //dataremotsource
   getIt.registerLazySingleton<DataRemoteSource>(() => DataRemoteSourceImpl());
@@ -83,6 +87,6 @@ void init() {
   getIt.registerFactory(() => DeleteKotaCubit(getIt()));
   getIt.registerFactory(() => BangunanKotaCubit(getIt()));
   getIt.registerFactory(() => DetailBangunanCubit(getIt()));
-  getIt.registerFactory(() => AddBangunanCubit(getIt()));
-  getIt.registerFactory(() => AddDetailBangunanCubit(getIt()));
+  getIt.registerFactory(() => AddBangunanCubit(getIt(), deleteBangunan: getIt()));
+  getIt.registerFactory(() => AddDetailBangunanCubit(getIt(), deleteDetalBangunan: getIt()));
 }

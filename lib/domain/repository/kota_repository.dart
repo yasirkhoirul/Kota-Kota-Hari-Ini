@@ -32,4 +32,6 @@ abstract class KotaRepository {
   Future<List<DetailBangunanEntity>> getBangunanDetail(int idbangunan);
   Future<void> addBangunan(XFile image, int idKota, String deskripsi);
   Future<void> addDetailBangunan(XFile image, int idBangunan, String deskripsi);
+  Future<String> deleteDetailBangunan(int idDetailBangunan, String imageUrl);
+  Future<String> deleteBangunan(int idBangunan, String imageUrl);
 }

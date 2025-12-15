@@ -8,7 +8,7 @@ import 'package:kota_kota_hari_ini/persentation/cubit/add_bangunan_cubit.dart';
 import 'package:kota_kota_hari_ini/persentation/cubit/bangunan_kota_cubit.dart';
 
 // PASTIKAN ANDA MENGIMPORT FILE DEPENDENCY INJECTION (DI) ANDA
-// import 'package:kota_kota_hari_ini/injection_container.dart' as di; 
+// import 'package:kota_kota_hari_ini/injection_container.dart' as di;
 // Atau sesuaikan cara anda memanggil Cubit
 
 class BangunanKotaPage extends StatefulWidget {
@@ -36,12 +36,12 @@ class _BangunanKotaPageState extends State<BangunanKotaPage> {
         // Kita bungkus Dialog dengan BlocProvider untuk AddBangunanCubit
         // Asumsi: Anda menggunakan GetIt/DI, sesuaikan 'create' nya
         return _DialogContent(
-            idKota: int.parse(widget.idKota),
-            onSuccess: () {
-              // Refresh list di halaman utama setelah sukses add
-              rootContext.read<BangunanKotaCubit>().getBangunan(widget.idKota);
-            },
-          );
+          idKota: int.parse(widget.idKota),
+          onSuccess: () {
+            // Refresh list di halaman utama setelah sukses add
+            rootContext.read<BangunanKotaCubit>().getBangunan(widget.idKota);
+          },
+        );
       },
     );
   }
@@ -50,7 +50,7 @@ class _BangunanKotaPageState extends State<BangunanKotaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Daftar Bangunan")),
-      
+
       // --- FLOATING ACTION BUTTON ---
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddDialog(context),
@@ -70,9 +70,11 @@ class _BangunanKotaPageState extends State<BangunanKotaPage> {
                 children: [
                   Text(state.message),
                   ElevatedButton(
-                    onPressed: () => context.read<BangunanKotaCubit>().getBangunan(widget.idKota),
+                    onPressed: () => context
+                        .read<BangunanKotaCubit>()
+                        .getBangunan(widget.idKota),
                     child: const Text("Retry"),
-                  )
+                  ),
                 ],
               ),
             );
@@ -82,7 +84,8 @@ class _BangunanKotaPageState extends State<BangunanKotaPage> {
             return ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: state.data.length,
-              itemBuilder: (context, index) => _buildBangunanCard(state.data[index],widget.idKota),
+              itemBuilder: (context, index) =>
+                  _buildBangunanCard(state.data[index], widget.idKota),
             );
           }
           return const SizedBox.shrink();
@@ -91,28 +94,59 @@ class _BangunanKotaPageState extends State<BangunanKotaPage> {
     );
   }
 
-  Widget _buildBangunanCard(BangunanEntity bangunan,String idkota) {
-    return InkWell(
-      onTap: () => context.pushNamed('detailbangunankota',pathParameters: {
-        'id':idkota,
-        'idbangunan':bangunan.id.toString(),
-      }),
-      child: Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Column(
+  Widget _buildBangunanCard(BangunanEntity bangunan, String idkota) {
+    return BlocConsumer<AddBangunanCubit, AddBangunanState>(
+      listener: (context, state) {
+        if (state is AddBangunanSuccessDelete) {
+          context.read<BangunanKotaCubit>().getBangunan(idkota);
+        }
+      },
+      builder: (context, state) {
+        return Row(
           children: [
-            SizedBox(
-              height: 200, 
-              width: double.infinity,
-              child: Image.network(bangunan.imagePath, fit: BoxFit.cover, errorBuilder: (_,__,___) => const Icon(Icons.error)),
+            Expanded(
+              child: InkWell(
+                onTap: () => context.pushNamed(
+                  'detailbangunankota',
+                  pathParameters: {
+                    'id': idkota,
+                    'idbangunan': bangunan.id.toString(),
+                  },
+                ),
+                child: Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 200,
+                        width: double.infinity,
+                        child: Image.network(
+                          bangunan.imagePath,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => const Icon(Icons.error),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(bangunan.deskripsi),
+                        subtitle: Text("ID Kota: ${bangunan.idKota}"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            ListTile(
-              title: Text(bangunan.deskripsi),
-              subtitle: Text("ID Kota: ${bangunan.idKota}"),
-            )
+            IconButton(
+              onPressed: () {
+                context.read<AddBangunanCubit>().deleteBangunanKota(
+                  bangunan.id,
+                  bangunan.imagePath,
+                );
+              },
+              icon: Icon(Icons.cancel, color: Colors.redAccent),
+            ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -151,9 +185,13 @@ class _DialogContentState extends State<_DialogContent> {
         if (state is AddBangunanSuccess) {
           Navigator.pop(context); // Tutup dialog
           widget.onSuccess(); // Refresh list induk
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil!")));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Berhasil!")));
         } else if (state is AddBangunanError) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       child: AlertDialog(
@@ -178,14 +216,19 @@ class _DialogContentState extends State<_DialogContent> {
                         ? Image.network(_selectedImage!.path, fit: BoxFit.cover)
                         : const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [Icon(Icons.camera_alt), Text("Pilih Foto")],
+                            children: [
+                              Icon(Icons.camera_alt),
+                              Text("Pilih Foto"),
+                            ],
                           ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // --- INPUT DESKRIPSI ---
                 TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
                   controller: _deskripsiController,
                   decoration: const InputDecoration(labelText: "Deskripsi"),
                   validator: (v) => v!.isEmpty ? "Isi deskripsi" : null,
@@ -195,8 +238,11 @@ class _DialogContentState extends State<_DialogContent> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Batal")),
-          
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Batal"),
+          ),
+
           // --- TOMBOL SIMPAN ---
           BlocBuilder<AddBangunanCubit, AddBangunanState>(
             builder: (context, state) {
@@ -205,22 +251,24 @@ class _DialogContentState extends State<_DialogContent> {
               }
               return ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate() && _selectedImage != null) {
+                  if (_formKey.currentState!.validate() &&
+                      _selectedImage != null) {
                     // Panggil Event AddBangunan
-                    context.read<AddBangunanCubit>().onsubmit
-                    (
+                    context.read<AddBangunanCubit>().onsubmit(
                       _deskripsiController.text,
-                       _selectedImage!,
-                       widget.idKota,
+                      _selectedImage!,
+                      widget.idKota,
                     );
                   } else if (_selectedImage == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Foto wajib dipilih!")));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Foto wajib dipilih!")),
+                    );
                   }
                 },
                 child: const Text("Simpan"),
               );
             },
-          )
+          ),
         ],
       ),
     );
