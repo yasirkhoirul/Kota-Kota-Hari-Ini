@@ -332,7 +332,9 @@ class BangunanListDesktop extends StatelessWidget {
             child: ListView.builder(
               itemCount: state.data.length,
               itemBuilder: (context, index) =>
-                  BangunanCardItem(bangunan: state.data[index], kotaid: kotaid),
+                  SlideInText(
+                    delay: index<3? index.toDouble():0,
+                    child: BangunanCardItem(bangunan: state.data[index], kotaid: kotaid)),
             ),
           );
         }
