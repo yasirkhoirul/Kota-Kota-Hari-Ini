@@ -35,83 +35,29 @@ class _DetailBangunanState extends State<DetailBangunan> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      
       backgroundColor: Colors.grey[50], // Warna background lebih terang & modern
       body: Stack(
         
         children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  const Color.fromARGB(255, 104, 102, 102).withAlpha(250),
-                  const Color.fromARGB(255, 131, 130, 130).withAlpha(40),
-                  const Color.fromARGB(255, 136, 136, 136).withAlpha(50),
-                ],
-                begin: AlignmentGeometry.bottomCenter,
-                end: AlignmentGeometry.topCenter,
-              ),
-            ),
-          ),
-         
+          Positioned(
+                  right: 0,
+                  left: 0,
+                  bottom: 0,
+                  top: 0,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.imageBangunan,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                ),
           CustomScrollView(
             physics: const BouncingScrollPhysics(), // Efek scroll iOS yang halus
             slivers: [
               // 1. Header Image yang Responsive
-              SliverAppBar(
-                expandedHeight: screenHeight * 0.4, // Tinggi 40% dari layar
-                pinned: true,
-                stretch: true,
-                backgroundColor: Colors.white,
-                elevation: 0,
-                leading: Container(
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-                flexibleSpace: FlexibleSpaceBar(
-                  stretchModes: const [
-                    StretchMode.zoomBackground,
-                    StretchMode.blurBackground,
-                  ],
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl: widget.imageBangunan,
-                        errorWidget: (context, url, error) =>
-                            const Center(child: Icon(Icons.broken_image, size: 50)),
-                        placeholder: (context, url) => Container(
-                          color: Colors.grey[300],
-                          child: const Center(child: CircularProgressIndicator()),
-                        ),
-                      ),
-                      // Gradient Overlay agar status bar/tombol tetap terlihat jelas
-                      const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black45,
-                              Colors.transparent,
-                            ],
-                            stops: [0.0, 0.3],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Membuat sudut bawah melengkung
-                
-              ),
+              
           
               // 2. Content Body berdasarkan State Bloc
               BlocBuilder<DetailBangunanCubit, DetailBangunanState>(

@@ -164,7 +164,7 @@ class _FrosGlassWrapState extends State<FrosGlassWrap>
                   ),
                   borderRadius: BorderRadius.circular(16.0),
                   border: Border.all(
-                    width: 1.5,
+                    width: 0.5,
                     color: Colors.white.withAlpha(
                       210,
                     ), // Border tipis untuk efek kaca

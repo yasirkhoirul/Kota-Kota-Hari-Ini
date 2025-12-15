@@ -87,42 +87,197 @@ class _DetailPageCustomState extends State<DetailPageCustom> {
                   physics: const BouncingScrollPhysics(),
                   slivers: [
                     // ------------------------------------------------
-                    // 1. HEADER IMAGE (SAMA UNTUK SEMUA LAYAR)
-                    // ------------------------------------------------
-
-                    // ------------------------------------------------
-                    // 2. LOGIC RESPONSIVE CONTENT
-                    // ------------------------------------------------
                     if (isDesktop) ...[
                       // ================= DESKTOP VIEW (SPLIT KIRI-KANAN) =================
                       SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.all(
-                            32.0,
-                          ), // Padding lebih besar di desktop
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                stateKota.data.namaKota,
-                                style: GoogleFonts.robotoFlex(
-                                  color: Colors.black,
-                                  fontSize: 56,
-                                  fontWeight: FontWeight.w800,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                              32.0,
+                            ), // Padding lebih besar di desktop
+                            child: SizedBox(
+                              width: 1500,
+                              height: 830,
+                              child: FrosGlassWrap(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 50,
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center, // Rata atas
+                                    children: [
+                                      // KIRI: DESKRIPSI (Flexible agar bisa scroll jika panjang)
+                                      Expanded(
+                                        flex:
+                                            1, // Mengambil 50% layar (atau bisa diatur misal 4)
+                                        child: SlideInText(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(20),
+                                            child: SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                spacing: 5,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                children: [
+                                                  Text(
+                                                    "KOTA",
+                                                    style:
+                                                        GoogleFonts.robotoFlex(
+                                                          color: Colors.white,
+                                                          fontSize: 56,
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                        ),
+                                                  ),
+                                                  Text(
+                                                    stateKota.data.namaKota,
+                                                    style:
+                                                        GoogleFonts.robotoFlex(
+                                                          color: Colors.black,
+                                                          fontSize: 56,
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                        ),
+                                                  ),
+                                                  LayoutBuilder(
+                                                    builder: (context, constrainst) {
+                                                      final double lebar =
+                                                          constrainst.maxWidth *
+                                                          0.5;
+                                                      return Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                              right: lebar,
+                                                            ),
+                                                        child: Container(
+                                                          height: 2,
+                                                          width:
+                                                              double.maxFinite,
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  15,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.location_on,
+                                                        color: Color(
+                                                          0xFFB7410E,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        stateKota.data.lokasi,
+                                                        style:
+                                                            GoogleFonts.robotoFlex(
+                                                              color: Color(
+                                                                0xFFB7410E,
+                                                              ),
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  TeksDeskripsi(
+                                                    namakota:
+                                                        stateKota.data.namaKota,
+                                                    deskiprpsi: stateKota
+                                                        .data
+                                                        .deskripsiPanjang,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      const SizedBox(width: 40), // Jarak tengah
+                                      // KANAN: LIST BANGUNAN
+                                      Expanded(
+                                        flex: 1, // Mengambil 50% layar
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            BangunanListDesktop(
+                                              kotaid: widget.id,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start, // Rata atas
-                                children: [
-                                  // KIRI: DESKRIPSI (Flexible agar bisa scroll jika panjang)
-                                  Expanded(
-                                    flex:
-                                        1, // Mengambil 50% layar (atau bisa diatur misal 4)
-                                    child: SlideInText(
-                                      child: FrosGlassWrap(
+                            ),
+                          ),
+                        ),
+                      ),
+                    ] else ...[
+                      // ================= MOBILE VIEW (STACK ATAS-BAWAH) =================
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 20),
+                          child: FrosGlassWrap(
+                            child: SizedBox(
+                              height: 600,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    
+                                    Text(
+                                      stateKota.data.namaKota,
+                                      style: GoogleFonts.robotoFlex(
+                                        color: Colors.black,
+                                        fontSize: 56,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    LayoutBuilder(
+                                      builder: (context, constrainst) {
+                                        final double lebar =
+                                            constrainst.maxWidth * 0.5;
+                                        return Container(
+                                          height: 2,
+                                          width: lebar,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(15),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.location_on,
+                                          color: Color(0xFFB7410E),
+                                        ),
+                                        Text(
+                                          stateKota.data.lokasi,
+                                          style: GoogleFonts.robotoFlex(
+                                            color: Color(0xFFB7410E),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    
+                                    Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: SlideInText(
                                         child: Padding(
-                                          padding: const EdgeInsets.all(20),
+                                          padding: const EdgeInsets.all(8.0),
                                           child: TeksDeskripsi(
                                             namakota: stateKota.data.namaKota,
                                             deskiprpsi:
@@ -131,57 +286,11 @@ class _DetailPageCustomState extends State<DetailPageCustom> {
                                         ),
                                       ),
                                     ),
-                                  ),
-
-                                  const SizedBox(width: 40), // Jarak tengah
-                                  // KANAN: LIST BANGUNAN
-                                  Expanded(
-                                    flex: 1, // Mengambil 50% layar
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        BangunanListDesktop(kotaid: widget.id),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ] else ...[
-                      // ================= MOBILE VIEW (STACK ATAS-BAWAH) =================
-                      SliverToBoxAdapter(
-                        child: Column(
-                          children: [
-                            Text(
-                              stateKota.data.namaKota,
-                              style: GoogleFonts.robotoFlex(
-                                color: Colors.black,
-                                fontSize: 56,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: SlideInText(
-                                child: FrosGlassWrap(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TeksDeskripsi(
-                                      namakota: stateKota.data.namaKota,
-                                      deskiprpsi:
-                                          stateKota.data.deskripsiPanjang,
-                                    ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
 
@@ -218,10 +327,13 @@ class BangunanListDesktop extends StatelessWidget {
         if (state is BangunanKotaLoaded) {
           if (state.data.isEmpty) return const Text("Belum ada data.");
           // Menggunakan Column agar bisa masuk di dalam Row -> Expanded
-          return Column(
-            children: state.data.map((bangunan) {
-              return BangunanCardItem(bangunan: bangunan, kotaid: kotaid);
-            }).toList(),
+          return SizedBox(
+            height: 800,
+            child: ListView.builder(
+              itemCount: state.data.length,
+              itemBuilder: (context, index) =>
+                  BangunanCardItem(bangunan: state.data[index], kotaid: kotaid),
+            ),
           );
         }
         return const SizedBox.shrink();
